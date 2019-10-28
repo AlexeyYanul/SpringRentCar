@@ -12,21 +12,20 @@ import java.util.List;
 @Transactional
 public class UserService {
 
-    private  UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
     public UserService(UserRepository repository) {
         this.userRepository = repository;
     }
 
-    public User findByLoginAndPassword(String login, String password){
+    public User findByLoginAndPassword(String login, String password) {
         return userRepository.findByLoginAndPassword(login, password);
     }
 
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
-
 
 
 }

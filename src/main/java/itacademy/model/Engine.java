@@ -8,11 +8,13 @@ public class Engine {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private Double volume;
 
+    @Column(nullable = false)
     private String fuel;
 
-    @Column(name = "fuel_economy")
+    @Column(name = "fuel_economy", nullable = false)
     private String fuelEconomy;
 
     public Engine() {

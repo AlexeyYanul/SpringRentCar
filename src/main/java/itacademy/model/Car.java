@@ -3,6 +3,7 @@ package itacademy.model;
 import itacademy.model.enums.Body;
 import itacademy.model.enums.Drive;
 import itacademy.model.enums.Gearbox;
+import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 import java.util.Arrays;
@@ -14,14 +15,18 @@ public class Car {
     private Long id;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Gearbox gearbox;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Drive drive;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Body body;
 
+    @Column(nullable = false)
     private Integer seats;
 
     private byte[] image;
