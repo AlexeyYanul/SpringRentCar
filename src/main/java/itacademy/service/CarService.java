@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+//TODO: add check info in DB before save
+
 /**
  * The type Car service.
  */
@@ -118,6 +120,7 @@ public class CarService {
      *
      * @param car the car
      */
+
     public void saveCar(Car car) {
         CarModel transientCarModel = car.getCarModel();
         carModelService.saveCarModel(transientCarModel);
