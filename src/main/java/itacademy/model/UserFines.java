@@ -1,5 +1,7 @@
 package itacademy.model;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -15,6 +17,9 @@ public class UserFines {
 
     private BigDecimal bill;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
     private Date date;
 
     @ManyToOne

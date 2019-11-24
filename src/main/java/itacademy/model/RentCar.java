@@ -1,6 +1,9 @@
 package itacademy.model;
 
+import itacademy.model.enums.RentCarStatus;
+
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -10,13 +13,17 @@ public class RentCar {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_date")
     private Date startDate;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "finish_date")
     private Date finishDate;
 
-    private Boolean status;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RentCarStatus status = RentCarStatus.REQUEST;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -29,7 +36,7 @@ public class RentCar {
     public RentCar() {
     }
 
-    public RentCar(Long id, Date startDate, Date finishDate, Boolean status, User user, Car car) {
+    public RentCar(Long id, Date startDate, Date finishDate, RentCarStatus status, User user, Car car) {
         this.id = id;
         this.startDate = startDate;
         this.finishDate = finishDate;
@@ -74,11 +81,11 @@ public class RentCar {
         this.finishDate = finishDate;
     }
 
-    public Boolean getStatus() {
+    public RentCarStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(RentCarStatus status) {
         this.status = status;
     }
 

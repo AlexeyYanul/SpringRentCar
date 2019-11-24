@@ -17,7 +17,7 @@ public interface CarRepository extends JpaRepository<Car, Long> {
 
     List<Car> findByBody(Body body);
 
-    List<Car> findByCarInfoIsFree(Boolean b);
+    List<Car> findByCarInfoStatus(Boolean status);
 
     List<Car> findByGearbox(Gearbox gearbox);
 

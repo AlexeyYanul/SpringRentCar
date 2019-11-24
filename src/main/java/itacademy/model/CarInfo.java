@@ -10,8 +10,8 @@ public class CarInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "is_free")
-    private Boolean isFree;
+    @Column(nullable = false)
+    private Boolean status;
 
     @Column(name = "hour_price")
     private BigDecimal hourPrice;
@@ -23,9 +23,9 @@ public class CarInfo {
     public CarInfo() {
     }
 
-    public CarInfo(Long id, Boolean isFree, BigDecimal hourPrice, Car car) {
+    public CarInfo(Long id, Boolean status, BigDecimal hourPrice, Car car) {
         this.id = id;
-        this.isFree = isFree;
+        this.status = status;
         this.hourPrice = hourPrice;
         this.car = car;
     }
@@ -34,7 +34,7 @@ public class CarInfo {
     public String toString() {
         return "CarInfo{" +
                 "id=" + id +
-                ", isFree=" + isFree +
+                ", status=" + status +
                 ", hourPrice=" + hourPrice +
                 ", car=" + car +
                 '}';
@@ -48,12 +48,12 @@ public class CarInfo {
         this.id = id;
     }
 
-    public Boolean getFree() {
-        return isFree;
+    public Boolean getStatus() {
+        return status;
     }
 
-    public void setFree(Boolean free) {
-        isFree = free;
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 
     public BigDecimal getHourPrice() {
