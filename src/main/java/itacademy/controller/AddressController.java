@@ -41,8 +41,8 @@ public class AddressController {
     public ResponseEntity<Address> save(@RequestBody Address address){
         address.setId(null);
         addressService.saveAddress(address);
-        Address address1 = addressService.getById(address.getId());
-        return new ResponseEntity<>(address1, HttpStatus.OK);
+        Address savedAddress = addressService.getById(address.getId());
+        return new ResponseEntity<>(savedAddress, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
@@ -51,7 +51,19 @@ public class AddressController {
             throw new RuntimeException();
         }
         addressService.saveAddress(address);
-        Address address1 = addressService.getById(address.getId());
-        return new ResponseEntity<>(address1, HttpStatus.OK);
+        Address savedAddress = addressService.getById(address.getId());
+        return new ResponseEntity<>(savedAddress, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/find", method = RequestMethod.GET, params = "city")
+    public ResponseEntity<List<Address>> getByCity(@RequestParam(name = "city") String cityName){
+        List<Address> addresses = addressService.getByCity(cityName);
+        return new ResponseEntity<>(addresses, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/find", method = RequestMethod.GET, params = "street")
+    public ResponseEntity<List<Address>> getByStreet(@RequestParam(name = "street") String streetName){
+        List<Address> addresses = addressService.getByStreet(streetName);
+        return new ResponseEntity<>(addresses, HttpStatus.OK);
     }
 }

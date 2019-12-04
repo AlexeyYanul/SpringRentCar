@@ -16,4 +16,5 @@ public interface UserService {
     List<User> getByLastName(String lastName);
     List<User> getByExample(User user);
     void saveUser(User user);
+    void deleteById(Long id);
 }
