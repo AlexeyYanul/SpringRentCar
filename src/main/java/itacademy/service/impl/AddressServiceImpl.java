@@ -50,4 +50,9 @@ public class AddressServiceImpl implements AddressService {
     public void saveAddress(Address address) {
         addressRepository.save(address);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        addressRepository.deleteById(id);
+    }
 }

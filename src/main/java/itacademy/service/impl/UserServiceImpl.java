@@ -5,6 +5,7 @@ import itacademy.model.User;
 import itacademy.model.enums.Role;
 import itacademy.repository.UserRepository;
 import itacademy.service.AddressService;
+import itacademy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ import java.util.Optional;
 
 @Service(value = "userService")
 @Transactional
-public class UserServiceImpl {
+public class UserServiceImpl implements UserService{
 
     private UserRepository userRepository;
     private AddressService addressService;

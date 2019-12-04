@@ -35,9 +35,7 @@ public class CarInfo {
         return "CarInfo{" +
                 "id=" + id +
                 ", status=" + status +
-                ", hourPrice=" + hourPrice +
-                ", car=" + car +
-                '}';
+                ", hourPrice=" + hourPrice;
     }
 
     public Long getId() {
