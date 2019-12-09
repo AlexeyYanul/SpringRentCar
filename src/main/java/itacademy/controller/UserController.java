@@ -3,6 +3,7 @@ package itacademy.controller;
 import itacademy.model.User;
 import itacademy.model.enums.Role;
 import itacademy.service.UserService;
+import org.dozer.Mapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +15,12 @@ import java.util.Objects;
 @RequestMapping("/users")
 public class UserController {
 
+    private Mapper mapper;
+
     private UserService userService;
 
-    public UserController(UserService userService) {
+    public UserController(Mapper mapper, UserService userService) {
+        this.mapper = mapper;
         this.userService = userService;
     }
 
@@ -24,12 +28,6 @@ public class UserController {
     public ResponseEntity<List<User>> getAll() {
         List<User> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<User> getOne(@PathVariable Long id) {
-        User user = userService.getById(id);
-        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
@@ -42,8 +40,7 @@ public class UserController {
     public ResponseEntity<User> save(@RequestBody User user) {
         user.setId(null);
         user.getHomeAddress().setId(null);
-        userService.saveUser(user);
-        User savedUser = userService.getById(user.getId());
+        User savedUser = userService.saveUser(user);
         return new ResponseEntity<>(savedUser, HttpStatus.OK);
     }
 
@@ -52,9 +49,14 @@ public class UserController {
         if (!Objects.equals(user.getId(), id)) {
             throw new RuntimeException();
         }
-        userService.saveUser(user);
-        User savedUser = userService.getById(user.getId());
+        User savedUser = userService.saveUser(user);
         return new ResponseEntity<>(savedUser, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/find", method = RequestMethod.GET, params = {"id"})
+    public ResponseEntity<User> getOne(@RequestParam Long id) {
+        User user = userService.getById(id);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/find", method = RequestMethod.GET, params = {"login", "password"})

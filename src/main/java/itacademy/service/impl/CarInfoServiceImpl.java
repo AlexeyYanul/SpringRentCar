@@ -18,7 +18,7 @@ public class CarInfoServiceImpl implements CarInfoService {
         this.carInfoRepository = carInfoRepository;
     }
 
-    public void saveCarInfo(CarInfo carInfo) {
-        carInfoRepository.save(carInfo);
+    public CarInfo saveCarInfo(CarInfo carInfo) {
+        return carInfoRepository.save(carInfo);
     }
 }

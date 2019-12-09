@@ -33,7 +33,7 @@ public class EngineServiceImpl implements EngineService {
         return engine.get();
     }
 
-    public void saveEngine(Engine engine) {
-        engineRepository.save(engine);
+    public Engine saveEngine(Engine engine) {
+        return engineRepository.save(engine);
     }
 }

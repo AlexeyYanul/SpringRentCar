@@ -1,10 +1,8 @@
 package itacademy.service.impl;
 
-import itacademy.model.Address;
 import itacademy.model.User;
 import itacademy.model.enums.Role;
 import itacademy.repository.UserRepository;
-import itacademy.service.AddressService;
 import itacademy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -19,12 +17,10 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService{
 
     private UserRepository userRepository;
-    private AddressService addressService;
 
     @Autowired
-    public UserServiceImpl(UserRepository repository, AddressService addressService) {
+    public UserServiceImpl(UserRepository repository) {
         this.userRepository = repository;
-        this.addressService = addressService;
     }
 
     public User getByLoginAndPassword(String login, String password) {
@@ -68,10 +64,8 @@ public class UserServiceImpl implements UserService{
         return userRepository.findAll(example);
     }
 
-    public void saveUser(User user) {
-        Address homeAddress = user.getHomeAddress();
-        addressService.saveAddress(homeAddress);
-        userRepository.save(user);
+    public User saveUser(User user) {
+        return userRepository.save(user);
     }
 
     @Override

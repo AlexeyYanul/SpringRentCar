@@ -9,5 +9,5 @@ public interface EngineService {
 
     Engine getById(Long id);
 
-    void saveEngine(Engine engine);
+    Engine saveEngine(Engine engine);
 }

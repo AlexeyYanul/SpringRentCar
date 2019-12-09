@@ -1,13 +1,17 @@
 package itacademy.controller;
 
+import itacademy.dto.AddressDTO;
 import itacademy.model.Address;
 import itacademy.service.AddressService;
+import org.dozer.Mapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/addresses")
@@ -15,55 +19,76 @@ public class AddressController {
 
     private AddressService addressService;
 
-    public AddressController(AddressService addressService) {
+    private Mapper mapper;
+
+    public AddressController(AddressService addressService, Mapper mapper) {
         this.addressService = addressService;
+        this.mapper = mapper;
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<Address>> getAll(){
+    public ResponseEntity<List<AddressDTO>> getAll() {
         List<Address> addresses = addressService.getAllAddresses();
-        return new ResponseEntity<>(addresses, HttpStatus.OK);
+        List<AddressDTO> addressDTOList = addresses.stream()
+                .map((address) -> mapper.map(address, AddressDTO.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(addressDTOList, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Address> getOne(@PathVariable Long id){
-        Address address =  addressService.getById(id);
-        return new ResponseEntity<>(address, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE, params = {"id"})
     @ResponseStatus(value = HttpStatus.OK)
-    public void delete(@PathVariable Long id){
+    public void delete(@RequestParam Long id) {
         addressService.deleteById(id);
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Address> save(@RequestBody Address address){
-        address.setId(null);
-        addressService.saveAddress(address);
-        Address savedAddress = addressService.getById(address.getId());
-        return new ResponseEntity<>(savedAddress, HttpStatus.OK);
+    public ResponseEntity<AddressDTO> save(@Valid @RequestBody AddressDTO addressDto) {
+        addressDto.setId(null);
+        AddressDTO responseAddressDTO = mapper.map(
+                addressService.saveAddress(mapper.map(addressDto, Address.class)),
+                AddressDTO.class);
+        return new ResponseEntity<>(responseAddressDTO, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Address> update(@RequestBody Address address, @PathVariable Long id){
-        if (!Objects.equals(id, address.getId())) {
+    public ResponseEntity<AddressDTO> update(@Valid @RequestBody AddressDTO addressDTO, @PathVariable Long id) {
+        if (!Objects.equals(id, addressDTO.getId())) {
             throw new RuntimeException();
         }
-        addressService.saveAddress(address);
-        Address savedAddress = addressService.getById(address.getId());
-        return new ResponseEntity<>(savedAddress, HttpStatus.OK);
+        AddressDTO responseAddressDTO = mapper.map(addressService.saveAddress(mapper.map(addressDTO, Address.class)), AddressDTO.class);
+        return new ResponseEntity<>(responseAddressDTO, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/find", method = RequestMethod.GET, params = {"id"})
+    public ResponseEntity<AddressDTO> getOne(@RequestParam Long id) {
+        Address responseAddress = addressService.getById(id);
+        AddressDTO responseAddressDTO = mapper.map(responseAddress, AddressDTO.class);
+        return new ResponseEntity<>(responseAddressDTO, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/find", method = RequestMethod.GET, params = "city")
-    public ResponseEntity<List<Address>> getByCity(@RequestParam(name = "city") String cityName){
-        List<Address> addresses = addressService.getByCity(cityName);
-        return new ResponseEntity<>(addresses, HttpStatus.OK);
+    public ResponseEntity<List<AddressDTO>> getByCity(@RequestParam(name = "city") String cityName) {
+        List<Address> responseAddresses = addressService.getByCity(cityName);
+        List<AddressDTO> responseAddressesDTO = responseAddresses.stream()
+                .map((address -> mapper.map(address, AddressDTO.class)))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(responseAddressesDTO, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/find", method = RequestMethod.GET, params = "street")
-    public ResponseEntity<List<Address>> getByStreet(@RequestParam(name = "street") String streetName){
-        List<Address> addresses = addressService.getByStreet(streetName);
-        return new ResponseEntity<>(addresses, HttpStatus.OK);
+    public ResponseEntity<List<AddressDTO>> getByStreet(@RequestParam(name = "street") String streetName) {
+        if (streetName == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        List<Address> responseAddresses = addressService.getByStreet(streetName);
+
+        if (responseAddresses.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        List<AddressDTO> responseAddressesDTO = responseAddresses.stream()
+                .map((address -> mapper.map(address, AddressDTO.class)))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(responseAddressesDTO, HttpStatus.OK);
     }
 }

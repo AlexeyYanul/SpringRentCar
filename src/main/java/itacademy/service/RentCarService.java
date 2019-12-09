@@ -10,13 +10,13 @@ import java.util.List;
 public interface RentCarService {
     RentCar getById(Long id);
 
-    void requestRentCar(RentCar rentCar);
+    RentCar requestRentCar(RentCar rentCar);
 
-    void acceptRequest(RentCar rentCar);
+    RentCar acceptRequest(RentCar rentCar);
 
-    void finishRentCar(RentCar rentCar);
+    RentCar finishRentCar(RentCar rentCar);
 
-    void cancelRequest(RentCar rentCar);
+    RentCar cancelRequest(RentCar rentCar);
 
     List<RentCar> getByStatus(RentCarStatus status);
 

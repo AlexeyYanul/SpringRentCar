@@ -39,34 +39,33 @@ public class RentCarServiceImpl implements RentCarService {
         return rentCar.get();
     }
 
-    public void requestRentCar(RentCar rentCar) {
+    public RentCar requestRentCar(RentCar rentCar) {
         CarInfo carInfo = rentCar.getCar().getCarInfo();
-        if (carInfo.getStatus()) {
-            rentCarRepository.save(rentCar);
-        } else {
+        if (!carInfo.getStatus()) {
             System.out.println("car already rented");
         }
+        return rentCarRepository.save(rentCar);
     }
 
-    public void acceptRequest(RentCar rentCar) {
+    public RentCar acceptRequest(RentCar rentCar) {
         CarInfo carInfo = rentCar.getCar().getCarInfo();
         carInfo.setStatus(false);
         carInfoService.saveCarInfo(carInfo);
         rentCar.setStatus(RentCarStatus.ACTIVE);
-        rentCarRepository.save(rentCar);
+        return rentCarRepository.save(rentCar);
     }
 
-    public void finishRentCar(RentCar rentCar) {
+    public RentCar finishRentCar(RentCar rentCar) {
         CarInfo carInfo = rentCar.getCar().getCarInfo();
         carInfo.setStatus(true);
         carInfoService.saveCarInfo(carInfo);
         rentCar.setStatus(RentCarStatus.END);
-        rentCarRepository.save(rentCar);
+        return rentCarRepository.save(rentCar);
     }
 
-    public void cancelRequest(RentCar rentCar) {
+    public RentCar cancelRequest(RentCar rentCar) {
         rentCar.setStatus(RentCarStatus.CANCELED);
-        rentCarRepository.save(rentCar);
+        return rentCarRepository.save(rentCar);
     }
 
     public List<RentCar> getByStatus(RentCarStatus status) {

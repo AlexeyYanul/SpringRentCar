@@ -20,6 +20,7 @@
         <springdatajpa.version>2.2.0.RELEASE</springdatajpa.version>
         <javax.servlet>4.0.1</javax.servlet>
         <jackson.core>2.9.9</jackson.core>
+        <dozer>5.5.1</dozer>
     </properties>
 
     <dependencies>
@@ -96,6 +97,13 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.core}</version>
+        </dependency>
+
+        <!--Mappper DTO-->
+        <dependency>
+            <groupId>net.sf.dozer</groupId>
+            <artifactId>dozer</artifactId>
+            <version>${dozer}</version>
         </dependency>
 
     </dependencies>

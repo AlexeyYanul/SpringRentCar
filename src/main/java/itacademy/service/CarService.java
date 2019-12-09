@@ -21,7 +21,7 @@ public interface CarService {
 
     List<Car> getAllCars();
 
-    void saveCar(Car car);
+    Car saveCar(Car car);
 
     List<Car> getByExample(Car car);
 }

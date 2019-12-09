@@ -34,8 +34,8 @@ public class CarModelServiceImpl implements CarModelService {
         return carModel.get();
     }
 
-    public void saveCarModel(CarModel carModel) {
-        carModelRepository.save(carModel);
+    public CarModel saveCarModel(CarModel carModel) {
+        return carModelRepository.save(carModel);
     }
 
 }

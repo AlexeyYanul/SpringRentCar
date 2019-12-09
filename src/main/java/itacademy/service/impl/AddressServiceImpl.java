@@ -1,5 +1,6 @@
 package itacademy.service.impl;
 
+import itacademy.component.LocalizedMessageSource;
 import itacademy.model.Address;
 import itacademy.repository.AddressRepository;
 import itacademy.service.AddressService;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,17 +19,39 @@ public class AddressServiceImpl implements AddressService {
 
     private AddressRepository addressRepository;
 
+    private LocalizedMessageSource localizedMessageSource;
+
     @Autowired
-    public AddressServiceImpl(AddressRepository addressRepository) {
+    public AddressServiceImpl(AddressRepository addressRepository, LocalizedMessageSource localizedMessageSource) {
         this.addressRepository = addressRepository;
+        this.localizedMessageSource = localizedMessageSource;
+    }
+
+    public Address getById(Long id) {
+        if (id == null)
+            throw new NullPointerException(localizedMessageSource.getMessage("error.idIsNull", new Object[]{}));
+        Optional<Address> address = addressRepository.findById(id);
+        if (!address.isPresent())
+            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.address.notFound", new Object[]{}));
+        return address.get();
     }
 
     public List<Address> getByCity(String city) {
-        return addressRepository.findByCity(city);
+        if (city.isEmpty())
+            throw new NullPointerException(localizedMessageSource.getMessage("error.address.cityIsNull", new Object[]{}));
+        List<Address> addresses = addressRepository.findByCity(city);
+        if (addresses.isEmpty())
+            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.address.notFound", new Object[]{}));
+        return addresses;
     }
 
     public List<Address> getByStreet(String street) {
-        return addressRepository.findByStreet(street);
+        if (street.isEmpty())
+            throw new NullPointerException(localizedMessageSource.getMessage("error.address.streetIsNull", new Object[]{}));
+        List<Address> addresses = addressRepository.findByStreet(street);
+        if (addresses.isEmpty())
+            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.address.notFound", new Object[]{}));
+        return addresses;
     }
 
     public List<Address> getAllAddresses() {
@@ -39,16 +63,8 @@ public class AddressServiceImpl implements AddressService {
         return addressRepository.findAll(addressExample);
     }
 
-    public Address getById(Long id) {
-        Optional<Address> address = addressRepository.findById(id);
-        if (!address.isPresent()) {
-            return null;
-        }
-        return address.get();
-    }
-
-    public void saveAddress(Address address) {
-        addressRepository.save(address);
+    public Address saveAddress(Address address) {
+        return addressRepository.save(address);
     }
 
     @Override

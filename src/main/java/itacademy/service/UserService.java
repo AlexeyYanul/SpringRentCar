@@ -15,6 +15,6 @@ public interface UserService {
     List<User> getByCityAndStreet(String city, String street);
     List<User> getByLastName(String lastName);
     List<User> getByExample(User user);
-    void saveUser(User user);
+    User saveUser(User user);
     void deleteById(Long id);
 }

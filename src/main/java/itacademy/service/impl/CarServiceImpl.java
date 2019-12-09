@@ -22,15 +22,10 @@ import java.util.Optional;
 public class CarServiceImpl implements CarService {
 
     private CarRepository carRepository;
-    private CarModelService carModelService;
-    private EngineService engineService;
 
     @Autowired
-    public CarServiceImpl(CarRepository carRepository, CarModelService carModelService,
-                          EngineService engineService) {
+    public CarServiceImpl(CarRepository carRepository) {
         this.carRepository = carRepository;
-        this.carModelService = carModelService;
-        this.engineService = engineService;
     }
 
     public Car getById(Long id) {
@@ -65,12 +60,8 @@ public class CarServiceImpl implements CarService {
         return carRepository.findAll();
     }
 
-    public void saveCar(Car car) {
-        CarModel transientCarModel = car.getCarModel();
-        carModelService.saveCarModel(transientCarModel);
-        Engine transientEngine = car.getEngine();
-        engineService.saveEngine(transientEngine);
-        carRepository.save(car);
+    public Car saveCar(Car car) {
+        return carRepository.save(car);
     }
 
     public List<Car> getByExample(Car car) {

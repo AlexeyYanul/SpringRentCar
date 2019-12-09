@@ -22,8 +22,8 @@ public class UserFinesServiceImpl implements UserFinesService {
         this.userFinesRepository = userFinesRepository;
     }
 
-    public void saveUserFines(UserFines userFines) {
-        userFinesRepository.save(userFines);
+    public UserFines saveUserFines(UserFines userFines) {
+        return userFinesRepository.save(userFines);
     }
 
     public List<UserFines> getFinesByUser(User user) {

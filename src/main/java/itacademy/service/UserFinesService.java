@@ -6,7 +6,7 @@ import itacademy.model.UserFines;
 import java.util.List;
 
 public interface UserFinesService {
-    void saveUserFines(UserFines userFines);
+    UserFines saveUserFines(UserFines userFines);
 
     List<UserFines> getFinesByUser(User user);
 

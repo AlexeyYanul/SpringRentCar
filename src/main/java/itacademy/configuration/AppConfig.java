@@ -6,6 +6,6 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @ComponentScan(basePackages = "itacademy")
-@Import({WebConfig.class, JpaConfig.class})
+@Import({WebConfig.class, JpaConfig.class, MessageConfiguration.class})
 public class AppConfig {
 }

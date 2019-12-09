@@ -9,5 +9,5 @@ public interface CarModelService {
 
     CarModel getById(Long id);
 
-    void saveCarModel(CarModel carModel);
+    CarModel saveCarModel(CarModel carModel);
 }
