@@ -47,10 +47,7 @@ public class EngineServiceImpl implements EngineService {
     public Engine saveEngine(Engine engine) {
         if (engine.getId() != null)
             throw new NullPointerException(localizedMessageSource.getMessage("error.engine.notHaveId", new Object[]{}));
-        List<Engine> dublicateEngine = getByExample(engine);
-        if (!dublicateEngine.isEmpty()) {
-            throw new NullPointerException(localizedMessageSource.getMessage("error.engine.notUnique", new Object[]{}));
-        }
+        checkDuplicate(engine);
         return engineRepository.save(engine);
     }
 
@@ -58,9 +55,7 @@ public class EngineServiceImpl implements EngineService {
     public Engine updateEngine(Engine engine) {
         if (engine.getId() == null)
             throw new NullPointerException(localizedMessageSource.getMessage("error.engine.haveId", new Object[]{}));
-        List<Engine> dublicateEngine = getByExample(engine);
-        if (!dublicateEngine.isEmpty())
-            throw new NullPointerException(localizedMessageSource.getMessage("error.engine.notUnique", new Object[]{}));
+        checkDuplicate(engine);
         return engineRepository.save(engine);
     }
 
@@ -68,11 +63,20 @@ public class EngineServiceImpl implements EngineService {
     public void deleteEngien(Long id) {
         if (id == null)
             throw new NullPointerException(localizedMessageSource.getMessage("error.engine.haveId", new Object[]{}));
+        Optional<Engine> engine = engineRepository.findById(id);
+        if (!engine.isPresent())
+            throw new NullPointerException(localizedMessageSource.getMessage("error.engine.notExist", new Object[]{}));
         engineRepository.deleteById(id);
     }
 
     public List<Engine> getByExample(Engine engine) {
         Example<Engine> engineExample = Example.of(engine);
         return engineRepository.findAll(engineExample);
+    }
+
+    private void checkDuplicate(Engine engine){
+        List<Engine> duplicateCarModel = getByExample(engine);
+        if (!duplicateCarModel.isEmpty())
+            throw new NullPointerException(localizedMessageSource.getMessage("error.engine.notUnique", new Object[]{}));
     }
 }

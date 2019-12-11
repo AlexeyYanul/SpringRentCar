@@ -48,7 +48,7 @@ public class CarModelServiceImpl implements CarModelService {
     public CarModel saveCarModel(CarModel carModel) {
         if (carModel.getId() != null)
             throw new NullPointerException(localizedMessageSource.getMessage("error.carModel.notHaveId", new Object[]{}));
-        checkDublicate(carModel);
+        checkDuplicate(carModel);
         return carModelRepository.save(carModel);
     }
 
@@ -56,7 +56,7 @@ public class CarModelServiceImpl implements CarModelService {
     public CarModel updateCarModel(CarModel carModel) {
         if (carModel.getId() == null)
             throw new NullPointerException(localizedMessageSource.getMessage("error.carModel.haveId", new Object[]{}));
-        checkDublicate(carModel);
+        checkDuplicate(carModel);
         return carModelRepository.save(carModel);
     }
 
@@ -64,6 +64,9 @@ public class CarModelServiceImpl implements CarModelService {
     public void delete(Long id) {
         if (id == null)
             throw new NullPointerException(localizedMessageSource.getMessage("error.engine.haveId", new Object[]{}));
+        Optional<CarModel> carModel = carModelRepository.findById(id);
+        if (!carModel.isPresent())
+            throw new NullPointerException(localizedMessageSource.getMessage("error.carModel.notExist", new Object[]{}));
         carModelRepository.deleteById(id);
     }
 
@@ -72,9 +75,9 @@ public class CarModelServiceImpl implements CarModelService {
         return carModelRepository.findAll(modelExample);
     }
 
-    private void checkDublicate(CarModel carModel){
-        List<CarModel> dublicateCarModel = getByExample(carModel);
-        if (!dublicateCarModel.isEmpty())
+    private void checkDuplicate(CarModel carModel){
+        List<CarModel> duplicateCarModel = getByExample(carModel);
+        if (!duplicateCarModel.isEmpty())
             throw new NullPointerException(localizedMessageSource.getMessage("error.carModel.notUnique", new Object[]{}));
     }
 }

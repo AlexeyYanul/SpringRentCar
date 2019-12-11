@@ -66,9 +66,7 @@ public class AddressServiceImpl implements AddressService {
     public Address saveAddress(Address address) {
         if (address.getId() != null)
             throw new NullPointerException(localizedMessageSource.getMessage("error.address.notHaveId", new Object[]{}));
-        List<Address> dublicateAddress = getByExample(address);
-        if (!dublicateAddress.isEmpty())
-            throw new NullPointerException(localizedMessageSource.getMessage("error.address.notUnique", new Object[]{}));
+        checkDuplicate(address);
         return addressRepository.save(address);
     }
 
@@ -76,6 +74,9 @@ public class AddressServiceImpl implements AddressService {
     public void deleteById(Long id) {
         if (id == null)
             throw new NullPointerException(localizedMessageSource.getMessage("error.address.haveId", new Object[]{}));
+        Optional<Address> address = addressRepository.findById(id);
+        if (!address.isPresent())
+            throw new NullPointerException(localizedMessageSource.getMessage("error.address.notExist", new Object[]{}));
         addressRepository.deleteById(id);
     }
 
@@ -83,9 +84,13 @@ public class AddressServiceImpl implements AddressService {
     public Address updateAddress(Address address) {
         if (address.getId() == null)
             throw new NullPointerException(localizedMessageSource.getMessage("error.address.haveId", new Object[]{}));
-        List<Address> dublicateAddress = getByExample(address);
-        if (!dublicateAddress.isEmpty())
-            throw new NullPointerException(localizedMessageSource.getMessage("error.address.notUnique", new Object[]{}));
+        checkDuplicate(address);
         return addressRepository.save(address);
+    }
+
+    private void checkDuplicate(Address address){
+        List<Address> duplicateAddress = getByExample(address);
+        if (!duplicateAddress.isEmpty())
+            throw new NullPointerException(localizedMessageSource.getMessage("error.address.notUnique", new Object[]{}));
     }
 }

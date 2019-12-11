@@ -15,7 +15,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/carModel")
+@RequestMapping("/carModels")
 public class CarModelController {
 
     private Mapper mapper;

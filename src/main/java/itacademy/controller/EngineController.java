@@ -15,7 +15,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/engine")
+@RequestMapping(value = "/engines")
 public class EngineController {
 
     private Mapper mapper;
