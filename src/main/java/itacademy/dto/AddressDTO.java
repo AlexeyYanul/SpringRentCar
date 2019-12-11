@@ -1,5 +1,6 @@
 package itacademy.dto;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class AddressDTO {
@@ -7,11 +8,14 @@ public class AddressDTO {
     private Long id;
 
     @Size(min = 2, max = 20)
+    @NotNull
     private String city;
 
     @Size(min = 2, max = 20)
+    @NotNull
     private String street;
 
+    @NotNull
     private Integer home;
 
     private Integer flat;

@@ -10,4 +10,8 @@ public interface EngineService {
     Engine getById(Long id);
 
     Engine saveEngine(Engine engine);
+
+    Engine updateEngine(Engine engine);
+
+    void deleteEngien(Long id);
 }
