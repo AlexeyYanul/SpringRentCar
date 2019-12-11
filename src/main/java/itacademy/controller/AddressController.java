@@ -1,5 +1,6 @@
 package itacademy.controller;
 
+import itacademy.component.LocalizedMessageSource;
 import itacademy.dto.AddressDTO;
 import itacademy.model.Address;
 import itacademy.service.AddressService;
@@ -21,9 +22,12 @@ public class AddressController {
 
     private Mapper mapper;
 
-    public AddressController(AddressService addressService, Mapper mapper) {
+    private LocalizedMessageSource localizedMessageSource;
+
+    public AddressController(AddressService addressService, Mapper mapper, LocalizedMessageSource localizedMessageSource) {
         this.addressService = addressService;
         this.mapper = mapper;
+        this.localizedMessageSource = localizedMessageSource;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -53,9 +57,9 @@ public class AddressController {
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<AddressDTO> update(@Valid @RequestBody AddressDTO addressDTO, @PathVariable Long id) {
         if (!Objects.equals(id, addressDTO.getId())) {
-            throw new RuntimeException();
+            throw new NullPointerException(localizedMessageSource.getMessage("error.address.notFound", new Object[]{}));
         }
-        AddressDTO responseAddressDTO = mapper.map(addressService.saveAddress(mapper.map(addressDTO, Address.class)), AddressDTO.class);
+        AddressDTO responseAddressDTO = mapper.map(addressService.updateAddress(mapper.map(addressDTO, Address.class)), AddressDTO.class);
         return new ResponseEntity<>(responseAddressDTO, HttpStatus.OK);
     }
 
@@ -77,15 +81,7 @@ public class AddressController {
 
     @RequestMapping(value = "/find", method = RequestMethod.GET, params = "street")
     public ResponseEntity<List<AddressDTO>> getByStreet(@RequestParam(name = "street") String streetName) {
-        if (streetName == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
         List<Address> responseAddresses = addressService.getByStreet(streetName);
-
-        if (responseAddresses.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
         List<AddressDTO> responseAddressesDTO = responseAddresses.stream()
                 .map((address -> mapper.map(address, AddressDTO.class)))
                 .collect(Collectors.toList());

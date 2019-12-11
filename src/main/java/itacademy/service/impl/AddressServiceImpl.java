@@ -64,11 +64,28 @@ public class AddressServiceImpl implements AddressService {
     }
 
     public Address saveAddress(Address address) {
+        if (address.getId() != null)
+            throw new NullPointerException(localizedMessageSource.getMessage("error.address.notHaveId", new Object[]{}));
+        List<Address> dublicateAddress = getByExample(address);
+        if (!dublicateAddress.isEmpty())
+            throw new NullPointerException(localizedMessageSource.getMessage("error.address.notUnique", new Object[]{}));
         return addressRepository.save(address);
     }
 
     @Override
     public void deleteById(Long id) {
+        if (id == null)
+            throw new NullPointerException(localizedMessageSource.getMessage("error.address.haveId", new Object[]{}));
         addressRepository.deleteById(id);
+    }
+
+    @Override
+    public Address updateAddress(Address address) {
+        if (address.getId() == null)
+            throw new NullPointerException(localizedMessageSource.getMessage("error.address.haveId", new Object[]{}));
+        List<Address> dublicateAddress = getByExample(address);
+        if (!dublicateAddress.isEmpty())
+            throw new NullPointerException(localizedMessageSource.getMessage("error.address.notUnique", new Object[]{}));
+        return addressRepository.save(address);
     }
 }
