@@ -18,7 +18,7 @@ public class User extends Account {
 
     private String email;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "address_id", nullable = false)
     private Address homeAddress;
 

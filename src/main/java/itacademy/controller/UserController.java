@@ -1,5 +1,7 @@
 package itacademy.controller;
 
+import itacademy.component.LocalizedMessageSource;
+import itacademy.dto.UserDTO;
 import itacademy.model.User;
 import itacademy.model.enums.Role;
 import itacademy.service.UserService;
@@ -8,8 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
@@ -19,82 +23,109 @@ public class UserController {
 
     private UserService userService;
 
-    public UserController(Mapper mapper, UserService userService) {
+    private LocalizedMessageSource localizedMessageSource;
+
+    public UserController(Mapper mapper, UserService userService, LocalizedMessageSource localizedMessageSource) {
         this.mapper = mapper;
         this.userService = userService;
+        this.localizedMessageSource = localizedMessageSource;
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<User>> getAll() {
+    public ResponseEntity<List<UserDTO>> getAll() {
         List<User> users = userService.getAllUsers();
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        List<UserDTO> userDTOList = users.stream()
+                .map((user -> mapper.map(user, UserDTO.class)))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(userDTOList, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
-    public void delete(@PathVariable Long id) {
+    public void delete(@RequestParam Long id) {
         userService.deleteById(id);
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<User> save(@RequestBody User user) {
-        user.setId(null);
-        user.getHomeAddress().setId(null);
-        User savedUser = userService.saveUser(user);
-        return new ResponseEntity<>(savedUser, HttpStatus.OK);
+    public ResponseEntity<UserDTO> save(@Valid @RequestBody UserDTO userDTO) {
+        userDTO.setId(null);
+        userDTO.getHomeAddress().setId(null);
+        UserDTO responseUserDTO = mapper.map(
+                userService.saveUser(mapper.map(userDTO, User.class)),
+                UserDTO.class);
+        return new ResponseEntity<>(responseUserDTO, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<User> update(@RequestBody User user, @PathVariable Long id) {
-        if (!Objects.equals(user.getId(), id)) {
-            throw new RuntimeException();
+    @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity<UserDTO> update(@RequestBody UserDTO userDTO, @RequestParam Long id) {
+        if (!Objects.equals(id, userDTO.getId())) {
+            throw new NullPointerException(localizedMessageSource.getMessage("error.user.unexpectedId", new Object[]{}));
         }
-        User savedUser = userService.saveUser(user);
-        return new ResponseEntity<>(savedUser, HttpStatus.OK);
+        UserDTO responseUserDTO = mapper.map(
+                userService.updateUser(mapper.map(userDTO, User.class)),
+                UserDTO.class);
+        return new ResponseEntity<>(responseUserDTO, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/find", method = RequestMethod.GET, params = {"id"})
-    public ResponseEntity<User> getOne(@RequestParam Long id) {
+    public ResponseEntity<UserDTO> getOne(@RequestParam Long id) {
         User user = userService.getById(id);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        UserDTO responseUserDTO = mapper.map(user, UserDTO.class);
+        return new ResponseEntity<>(responseUserDTO, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/find", method = RequestMethod.GET, params = {"login", "password"})
-    public ResponseEntity<User> getByLoginAndPassword(@RequestParam String login,
-                                                      @RequestParam String password){
+    public ResponseEntity<UserDTO> getByLoginAndPassword(@RequestParam String login,
+                                                         @RequestParam String password) {
         User user = userService.getByLoginAndPassword(login, password);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        UserDTO responseUserDTO = mapper.map(user, UserDTO.class);
+        return new ResponseEntity<>(responseUserDTO, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/find", method = RequestMethod.GET, params = {"lastName"})
-    public ResponseEntity<List<User>> getByLastName(@RequestParam String lastName){
+    public ResponseEntity<List<UserDTO>> getByLastName(@RequestParam String lastName) {
         List<User> users = userService.getByLastName(lastName);
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        List<UserDTO> userDTOList = users.stream()
+                .map((user -> mapper.map(user, UserDTO.class)))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(userDTOList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/find", method = RequestMethod.GET, params = {"city"})
-    public ResponseEntity<List<User>> getByAddressCity(@RequestParam(name = "city") String cityName){
+    public ResponseEntity<List<UserDTO>> getByAddressCity(@RequestParam(name = "city") String cityName) {
         List<User> users = userService.getByCity(cityName);
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        List<UserDTO> userDTOList = users.stream()
+                .map((user -> mapper.map(user, UserDTO.class)))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(userDTOList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/find", method = RequestMethod.GET, params = "street")
-    public ResponseEntity<List<User>> getByAddressStreet(@RequestParam(name = "street") String streetName){
+    public ResponseEntity<List<UserDTO>> getByAddressStreet(@RequestParam(name = "street") String streetName) {
         List<User> users = userService.getByStreet(streetName);
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        List<UserDTO> userDTOList = users.stream()
+                .map((user -> mapper.map(user, UserDTO.class)))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(userDTOList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/find", method = RequestMethod.GET, params = {"city", "street"})
-    public ResponseEntity<List<User>> getByAddressCityAndStreet(@RequestParam String city,
-                                                                @RequestParam String street){
+    public ResponseEntity<List<UserDTO>> getByAddressCityAndStreet(@RequestParam String city,
+                                                                   @RequestParam String street) {
         List<User> users = userService.getByCityAndStreet(city, street);
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        List<UserDTO> userDTOList = users.stream()
+                .map((user -> mapper.map(user, UserDTO.class)))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(userDTOList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/find", method = RequestMethod.GET, params = "role")
-    public ResponseEntity<List<User>> getByRole(@RequestParam Role role){
+    public ResponseEntity<List<UserDTO>> getByRole(@RequestParam Role role) {
         List<User> users = userService.getByRole(role);
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        List<UserDTO> userDTOList = users.stream()
+                .map((user -> mapper.map(user, UserDTO.class)))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(userDTOList, HttpStatus.OK);
 
     }
 }

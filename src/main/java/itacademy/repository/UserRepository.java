@@ -27,4 +27,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                               @Param("street") String street);
 
     List<User> findByLastName(String lastName);
+
+    boolean existsByLogin(String login);
 }
