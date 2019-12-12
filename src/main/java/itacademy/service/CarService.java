@@ -11,17 +11,21 @@ public interface CarService {
 
     List<Car> getByCarModelName(String name);
 
-    List<Car> getByBody(Body body);
+    List<Car> getByBody(String body);
 
     List<Car> getAllFreeCars();
 
     List<Car> getByCarModelYear(Integer year);
 
-    List<Car> getByGearbox(Gearbox gearbox);
+    List<Car> getByGearbox(String gearbox);
 
     List<Car> getAllCars();
 
     Car saveCar(Car car);
+
+    Car updateCar(Car car);
+
+    void deleteCar(Long id);
 
     List<Car> getByExample(Car car);
 }
