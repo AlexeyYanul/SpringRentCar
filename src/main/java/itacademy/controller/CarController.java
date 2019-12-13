@@ -4,17 +4,17 @@ import itacademy.component.LocalizedMessageSource;
 import itacademy.dto.request.CarRequestDTO;
 import itacademy.dto.response.CarResponseDTO;
 import itacademy.model.Car;
-import itacademy.model.enums.Body;
+import itacademy.model.CarModel;
+import itacademy.model.Engine;
 import itacademy.service.CarService;
 import org.dozer.Mapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -92,5 +92,40 @@ public class CarController {
                 .map(car -> mapper.map(car, CarResponseDTO.class))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(carResponseDTOs, HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<CarResponseDTO> save(@Valid @RequestBody CarRequestDTO carRequestDTO) {
+        carRequestDTO.setId(null);
+        Car saveCar = carService.saveCar(getCar(carRequestDTO));
+        CarResponseDTO carResponseDTO = mapper.map(saveCar, CarResponseDTO.class);
+        return new ResponseEntity<>(carResponseDTO, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, params = {"id"})
+    public ResponseEntity<CarResponseDTO> update(@Valid @RequestBody CarRequestDTO carRequestDTO,
+                                                 @RequestParam Long id) {
+        if (!Objects.equals(id, carRequestDTO.getId()))
+            throw new NullPointerException(localizedMessageSource.getMessage("error.car.unexpectedId", new Object[]{}));
+        Car updateCar = carService.updateCar(getCar(carRequestDTO));
+        CarResponseDTO carResponseDTO = mapper.map(updateCar, CarResponseDTO.class);
+        return new ResponseEntity<>(carResponseDTO, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@RequestParam Long id) {
+        carService.deleteCar(id);
+    }
+
+    private Car getCar(CarRequestDTO carRequestDTO) {
+        Car car = mapper.map(carRequestDTO, Car.class);
+        CarModel carModel = new CarModel();
+        carModel.setId(carRequestDTO.getCarModelId());
+        car.setCarModel(carModel);
+        Engine engine = new Engine();
+        engine.setId(carRequestDTO.getEngineId());
+        car.setEngine(engine);
+        return car;
     }
 }
