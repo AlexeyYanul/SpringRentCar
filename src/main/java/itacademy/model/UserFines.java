@@ -22,6 +22,8 @@ public class  UserFines {
     @CreationTimestamp
     private Date date;
 
+    private Boolean status;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -29,11 +31,12 @@ public class  UserFines {
     public UserFines() {
     }
 
-    public UserFines(String description, BigDecimal bill, Date date, User user) {
+    public UserFines(String description, BigDecimal bill, Date date, User user, Boolean status) {
         this.description = description;
         this.bill = bill;
         this.date = date;
         this.user = user;
+        this.status = status;
     }
 
     @Override
@@ -43,6 +46,7 @@ public class  UserFines {
                 ", description='" + description + '\'' +
                 ", bill=" + bill +
                 ", date=" + date +
+                ", status=" + status +
                 ", user=" + user +
                 '}';
     }
@@ -77,6 +81,14 @@ public class  UserFines {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 
     public User getUser() {
