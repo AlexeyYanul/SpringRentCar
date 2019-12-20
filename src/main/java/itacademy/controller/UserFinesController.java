@@ -1,18 +1,19 @@
 package itacademy.controller;
 
 import itacademy.component.LocalizedMessageSource;
+import itacademy.dto.request.UserFinesRequestDTO;
 import itacademy.dto.response.UserFinesResponseDTO;
+import itacademy.model.User;
 import itacademy.model.UserFines;
 import itacademy.service.UserFinesService;
 import org.dozer.Mapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -64,5 +65,31 @@ public class UserFinesController {
                 .map(finesByUser -> mapper.map(finesByUser, UserFinesResponseDTO.class))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(finesResponseDTOs, HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<UserFinesResponseDTO> save(@Valid @RequestBody UserFinesRequestDTO userFinesRequestDTO) {
+        userFinesRequestDTO.setId(null);
+        UserFines userFines = userFinesService.saveUserFines(getUserFines(userFinesRequestDTO));
+        UserFinesResponseDTO userFinesResponseDTO = mapper.map(userFines, UserFinesResponseDTO.class);
+        return new ResponseEntity<>(userFinesResponseDTO, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, params = {"id"})
+    public ResponseEntity<UserFinesResponseDTO> update(@Valid @RequestBody UserFinesRequestDTO userFinesRequestDTO,
+                                                       @RequestParam Long id) {
+        if (!Objects.equals(id, userFinesRequestDTO.getId()))
+            throw new NullPointerException(localizedMessageSource.getMessage("error.userFines.unexpectedId", new Object[]{}));
+        UserFines userFines = userFinesService.updateUserFines(getUserFines(userFinesRequestDTO));
+        UserFinesResponseDTO userFinesResponseDTO = mapper.map(userFines, UserFinesResponseDTO.class);
+        return new ResponseEntity<>(userFinesResponseDTO, HttpStatus.OK);
+    }
+
+    private UserFines getUserFines(UserFinesRequestDTO userFinesRequestDTO) {
+        UserFines userFines = mapper.map(userFinesRequestDTO, UserFines.class);
+        User user = new User();
+        user.setId(userFinesRequestDTO.getUserId());
+        userFines.setUser(user);
+        return userFines;
     }
 }

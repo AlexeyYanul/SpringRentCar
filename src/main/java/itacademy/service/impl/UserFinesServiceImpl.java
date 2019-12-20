@@ -4,6 +4,7 @@ import itacademy.component.LocalizedMessageSource;
 import itacademy.model.UserFines;
 import itacademy.repository.UserFinesRepository;
 import itacademy.service.UserFinesService;
+import itacademy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -19,12 +20,16 @@ public class UserFinesServiceImpl implements UserFinesService {
 
     private UserFinesRepository userFinesRepository;
 
+    private UserService userService;
+
     private LocalizedMessageSource localizedMessageSource;
 
     @Autowired
     public UserFinesServiceImpl(UserFinesRepository userFinesRepository,
-                                LocalizedMessageSource localizedMessageSource) {
+                                LocalizedMessageSource localizedMessageSource,
+                                UserService userService) {
         this.userFinesRepository = userFinesRepository;
+        this.userService = userService;
         this.localizedMessageSource = localizedMessageSource;
     }
 
@@ -56,7 +61,7 @@ public class UserFinesServiceImpl implements UserFinesService {
 
     public List<UserFines> getFinesByUserId(Long userId) {
         if (userId == null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.userFines.unexpectedCarId", new Object[]{}));
+            throw new NullPointerException(localizedMessageSource.getMessage("error.userFines.unexpectedId", new Object[]{}));
         List<UserFines> userFinesList = userFinesRepository.findByUserId(userId);
         if (userFinesList.isEmpty())
             throw new EntityNotFoundException(localizedMessageSource.getMessage("error.userFines.notFound", new Object[]{}));
@@ -64,12 +69,17 @@ public class UserFinesServiceImpl implements UserFinesService {
     }
 
     public UserFines saveUserFines(UserFines userFines) {
+        if (userFines.getId() != null)
+            throw new NullPointerException(localizedMessageSource.getMessage("error.userFines.notHaveId", new Object[]{}));
+        userFines.setUser(userService.getById(userFines.getUser().getId()));
         return userFinesRepository.save(userFines);
     }
 
 
     public UserFines updateUserFines(UserFines userFines) {
-        return null;
+        getById(userFines.getId());
+        userFines.setUser(userService.getById(userFines.getUser().getId()));
+        return userFinesRepository.save(userFines);
     }
 
     @Override

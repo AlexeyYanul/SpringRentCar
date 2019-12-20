@@ -3,6 +3,7 @@ package itacademy.dto.response;
 import itacademy.dto.UserDTO;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class UserFinesResponseDTO {
@@ -13,7 +14,7 @@ public class UserFinesResponseDTO {
 
     private BigDecimal bill;
 
-    private Date date;
+    private String date;
 
     private Boolean status;
 
@@ -43,11 +44,11 @@ public class UserFinesResponseDTO {
         this.bill = bill;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

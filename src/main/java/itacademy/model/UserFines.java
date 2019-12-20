@@ -4,6 +4,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -17,10 +18,9 @@ public class  UserFines {
 
     private BigDecimal bill;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
-    private Date date;
+    private LocalDateTime date;
 
     private Boolean status;
 
@@ -31,7 +31,7 @@ public class  UserFines {
     public UserFines() {
     }
 
-    public UserFines(String description, BigDecimal bill, Date date, User user, Boolean status) {
+    public UserFines(String description, BigDecimal bill, LocalDateTime date, User user, Boolean status) {
         this.description = description;
         this.bill = bill;
         this.date = date;
@@ -75,11 +75,11 @@ public class  UserFines {
         this.bill = bill;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

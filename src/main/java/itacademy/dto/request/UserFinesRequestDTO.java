@@ -11,7 +11,7 @@ public class UserFinesRequestDTO {
 
     private BigDecimal bill;
 
-    private Date date;
+    private String date;
 
     private Boolean status;
 
@@ -41,11 +41,11 @@ public class UserFinesRequestDTO {
         this.bill = bill;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
