@@ -3,6 +3,7 @@ package itacademy.model;
 import itacademy.model.enums.RentCarStatus;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -13,17 +14,17 @@ public class RentCar {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_date")
-    private Date startDate;
+    private LocalDateTime startDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "finish_date")
-    private Date finishDate;
+    private LocalDateTime finishDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RentCarStatus status = RentCarStatus.REQUEST;
+
+    private BigDecimal bill;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -36,11 +37,13 @@ public class RentCar {
     public RentCar() {
     }
 
-    public RentCar(Long id, Date startDate, Date finishDate, RentCarStatus status, User user, Car car) {
+    public RentCar(Long id, LocalDateTime startDate, LocalDateTime finishDate, RentCarStatus status,
+                   BigDecimal bill, User user, Car car) {
         this.id = id;
         this.startDate = startDate;
         this.finishDate = finishDate;
         this.status = status;
+        this.bill = bill;
         this.user = user;
         this.car = car;
     }
@@ -65,19 +68,19 @@ public class RentCar {
         this.id = id;
     }
 
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public Date getFinishDate() {
+    public LocalDateTime getFinishDate() {
         return finishDate;
     }
 
-    public void setFinishDate(Date finishDate) {
+    public void setFinishDate(LocalDateTime finishDate) {
         this.finishDate = finishDate;
     }
 
@@ -87,6 +90,14 @@ public class RentCar {
 
     public void setStatus(RentCarStatus status) {
         this.status = status;
+    }
+
+    public BigDecimal getBill() {
+        return bill;
+    }
+
+    public void setBill(BigDecimal bill) {
+        this.bill = bill;
     }
 
     public User getUser() {

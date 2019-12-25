@@ -12,15 +12,17 @@ public interface RentCarService {
 
     RentCar requestRentCar(RentCar rentCar);
 
-    RentCar acceptRequest(RentCar rentCar);
+    RentCar acceptRequest(Long id);
 
-    RentCar finishRentCar(RentCar rentCar);
+    RentCar finishRentCar(Long id);
 
-    RentCar cancelRequest(RentCar rentCar);
+    RentCar cancelRequest(Long id);
 
-    List<RentCar> getByStatus(RentCarStatus status);
+    List<RentCar> getByStatus(String status);
 
-    List<RentCar> getByCar(Car car);
+    List<RentCar> getByCarId(Long carId);
 
-    List<RentCar> getByUser(User user);
+    List<RentCar> getByUserId(Long userId);
+
+    List<RentCar> getAll();
 }

@@ -85,6 +85,12 @@ public class UserFinesController {
         return new ResponseEntity<>(userFinesResponseDTO, HttpStatus.OK);
     }
 
+    @RequestMapping(method = RequestMethod.DELETE, params = {"id"})
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@RequestParam Long id) {
+        userFinesService.deleteById(id);
+    }
+
     private UserFines getUserFines(UserFinesRequestDTO userFinesRequestDTO) {
         UserFines userFines = mapper.map(userFinesRequestDTO, UserFines.class);
         User user = new User();

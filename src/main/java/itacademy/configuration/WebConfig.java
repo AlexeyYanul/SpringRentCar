@@ -1,8 +1,11 @@
 package itacademy.configuration;
 
 import itacademy.converter.dozer.LocalDateTimeConverter;
+import itacademy.dto.request.RentRequestDTO;
 import itacademy.dto.request.UserFinesRequestDTO;
+import itacademy.dto.response.RentResponseDTO;
 import itacademy.dto.response.UserFinesResponseDTO;
+import itacademy.model.RentCar;
 import itacademy.model.UserFines;
 import org.dozer.CustomConverter;
 import org.dozer.DozerBeanMapper;
@@ -38,6 +41,16 @@ public class WebConfig {
                                 FieldsMappingOptions.customConverter(LocalDateTimeConverter.class));
                 mapping(UserFinesRequestDTO.class, UserFines.class)
                         .fields("date", "date",
+                                FieldsMappingOptions.customConverter(LocalDateTimeConverter.class));
+                mapping(RentCar.class, RentResponseDTO.class)
+                        .fields("startDate", "startDate",
+                                FieldsMappingOptions.customConverter(LocalDateTimeConverter.class))
+                        .fields("finishDate", "finishDate",
+                                FieldsMappingOptions.customConverter(LocalDateTimeConverter.class));
+                mapping(RentRequestDTO.class, RentCar.class)
+                        .fields("startDate", "startDate",
+                                FieldsMappingOptions.customConverter(LocalDateTimeConverter.class))
+                        .fields("finishDate", "finishDate",
                                 FieldsMappingOptions.customConverter(LocalDateTimeConverter.class));
             }
         };

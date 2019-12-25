@@ -84,6 +84,7 @@ public class UserFinesServiceImpl implements UserFinesService {
 
     @Override
     public void deleteById(Long id) {
-
+        getById(id);
+        userFinesRepository.deleteById(id);
     }
 }
