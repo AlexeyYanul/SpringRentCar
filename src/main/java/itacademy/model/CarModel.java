@@ -1,7 +1,6 @@
 package itacademy.model;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "car_model")

@@ -5,7 +5,6 @@ import itacademy.model.enums.RentCarStatus;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "rent_car")

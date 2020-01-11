@@ -3,10 +3,8 @@ package itacademy.model;
 import itacademy.model.enums.Body;
 import itacademy.model.enums.Drive;
 import itacademy.model.enums.Gearbox;
-import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
-import java.util.Arrays;
 
 @Entity
 public class Car {
@@ -29,8 +27,6 @@ public class Car {
     @Column(nullable = false)
     private Integer seats;
 
-    private byte[] image;
-
     @ManyToOne
     @JoinColumn(name = "model_id", nullable = false)
     private CarModel carModel;
@@ -45,12 +41,11 @@ public class Car {
     public Car() {
     }
 
-    public Car(Gearbox gearbox, Drive drive, Body body, Integer seats, byte[] image, CarModel carModel, Engine engine) {
+    public Car(Gearbox gearbox, Drive drive, Body body, Integer seats, CarModel carModel, Engine engine) {
         this.gearbox = gearbox;
         this.drive = drive;
         this.body = body;
         this.seats = seats;
-        this.image = image;
         this.carModel = carModel;
         this.engine = engine;
     }
@@ -63,7 +58,6 @@ public class Car {
                 ", drive=" + drive +
                 ", body=" + body +
                 ", seats=" + seats +
-                ", image=" + Arrays.toString(image) +
                 ", carModel=" + carModel +
                 ", engine=" + engine +
                 '}';
@@ -107,14 +101,6 @@ public class Car {
 
     public void setSeats(Integer seats) {
         this.seats = seats;
-    }
-
-    public byte[] getImage() {
-        return image;
-    }
-
-    public void setImage(byte[] image) {
-        this.image = image;
     }
 
     public CarModel getCarModel() {

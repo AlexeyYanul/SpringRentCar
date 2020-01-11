@@ -1,18 +1,22 @@
 package itacademy.dto;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class EngineDTO {
 
     private Long id;
 
-    @NotNull
+    @NotNull(message = "{engine.volume.notNull}")
+    @NotEmpty(message = "{engine.volume.notEmpty}")
     private Double volume;
 
-    @NotNull
+    @NotNull(message = "{engine.fuel.notNull}")
+    @NotEmpty(message = "{engine.fuel.notEmpty}")
     private String fuel;
 
-    @NotNull
+    @NotNull(message = "{engine.fuelEconomy.notNull}")
+    @NotEmpty(message = "{engine.fuelEconomy.notEmpty}")
     private String fuelEconomy;
 
     public Long getId() {

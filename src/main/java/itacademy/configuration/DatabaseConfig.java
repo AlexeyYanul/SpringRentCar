@@ -21,7 +21,7 @@ import java.util.Properties;
 @EnableJpaRepositories(basePackages = "itacademy.repository")
 @EnableTransactionManagement
 @PropertySource(value = "classpath:database.properties")
-public class JpaConfig {
+public class DatabaseConfig {
 
     @Value("${jdbc.driverClassName}")
     private String jdbcDriverClassName;

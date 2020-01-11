@@ -5,11 +5,10 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "users_fines")
-public class  UserFines {
+public class UserFines {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

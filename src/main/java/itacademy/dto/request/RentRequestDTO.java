@@ -2,20 +2,29 @@ package itacademy.dto.request;
 
 import itacademy.model.enums.RentCarStatus;
 
-import java.math.BigDecimal;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 public class RentRequestDTO {
 
     private Long id;
 
+    @NotNull(message = "{rent.startDate.notNull}")
+    @NotEmpty(message = "{rent.startDate.notEmpty}")
     private String startDate;
 
+    @NotNull(message = "{rent.finishDate.notNull}")
+    @NotEmpty(message = "{rent.finishDate.notEmpty}")
     private String finishDate;
 
     private RentCarStatus status;
 
+    @NotNull(message = "{rent.user.notNull}")
+    @NotEmpty(message = "{rent.user.notEmpty}")
     private Long userId;
 
+    @NotNull(message = "{rent.car.notNull}")
+    @NotEmpty(message = "{rent.car.notEmpty}")
     private Long carId;
 
     public Long getId() {

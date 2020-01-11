@@ -1,5 +1,6 @@
 package itacademy.dto.request;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
@@ -7,13 +8,16 @@ public class CarInfoRequestDTO {
 
     private Long id;
 
-    @NotNull
+    @NotNull(message = "{carInfo.status.notNull}")
+    @NotEmpty(message = "{carInfo.status.notEmpty}")
     private Boolean status;
 
-    @NotNull
+    @NotNull(message = "{carInfo.hourPrice.notNull}")
+    @NotEmpty(message = "{carInfo.hourPrice.notEmpty}")
     private BigDecimal hourPrice;
 
-    @NotNull
+    @NotNull(message = "{carInfo.car.notNull}")
+    @NotEmpty(message = "{carInfo.car.notEmpty}")
     private Long carId;
 
     public Long getId() {

@@ -1,15 +1,18 @@
 package itacademy.dto;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class CarModelDTO {
 
     private Long id;
 
-    @NotNull
+    @NotNull(message = "{carModel.name.notNull}")
+    @NotEmpty(message = "{carModel.name.notEmpty}")
     private String name;
 
-    @NotNull
+    @NotNull(message = "{carModel.year.notNull}")
+    @NotEmpty(message = "{carModel.year.notEmpty}")
     private Integer year;
 
     public Long getId() {

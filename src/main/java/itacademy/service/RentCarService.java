@@ -1,9 +1,6 @@
 package itacademy.service;
 
-import itacademy.model.Car;
 import itacademy.model.RentCar;
-import itacademy.model.User;
-import itacademy.model.enums.RentCarStatus;
 
 import java.util.List;
 

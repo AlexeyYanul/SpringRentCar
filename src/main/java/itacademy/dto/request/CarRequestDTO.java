@@ -4,26 +4,35 @@ import itacademy.model.enums.Body;
 import itacademy.model.enums.Drive;
 import itacademy.model.enums.Gearbox;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class CarRequestDTO {
 
     private Long id;
 
+    @NotNull(message = "{car.gearbox.notNull}")
+    @NotEmpty(message = "{car.gearbox.notEmpty}")
     private Gearbox gearbox;
 
+    @NotNull(message = "{car.drive.notNull}")
+    @NotEmpty(message = "{car.drive.notEmpty}")
     private Drive drive;
 
+    @NotNull(message = "{car.body.notNull}")
+    @NotEmpty(message = "{car.body.notEmpty}")
     private Body body;
 
+    @NotNull(message = "{car.seats.notNull}")
+    @NotEmpty(message = "{car.seats.notEmpty}")
     private Integer seats;
 
-    private byte[] image;
-
-    @NotNull
+    @NotNull(message = "{car.model.notNull}")
+    @NotEmpty(message = "{car.model.notEmpty}")
     private Long CarModelId;
 
-    @NotNull
+    @NotNull(message = "{car.engine.notNull}")
+    @NotEmpty(message = "{car.engine.notEmpty}")
     private Long engineId;
 
     public Long getId() {
@@ -64,14 +73,6 @@ public class CarRequestDTO {
 
     public void setSeats(Integer seats) {
         this.seats = seats;
-    }
-
-    public byte[] getImage() {
-        return image;
-    }
-
-    public void setImage(byte[] image) {
-        this.image = image;
     }
 
     public Long getCarModelId() {

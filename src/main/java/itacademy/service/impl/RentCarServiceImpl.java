@@ -52,8 +52,7 @@ public class RentCarServiceImpl implements RentCarService {
 
     @Override
     public RentCar getById(Long id) {
-        if (id == null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.rent.haveId", new Object[]{}));
+        validate(id == null, "error.rent.haveId");
         Optional<RentCar> rentCar = rentCarRepository.findById(id);
         if (!rentCar.isPresent()) {
             throw new EntityNotFoundException(localizedMessageSource.getMessage("error.rent.notFound", new Object[]{}));
@@ -69,9 +68,7 @@ public class RentCarServiceImpl implements RentCarService {
         Car car = carService.getById(carId);
 
         Boolean carStatus = carInfoService.getByCarId(carId).getStatus();
-        if (!carStatus) {
-            throw new NullPointerException(localizedMessageSource.getMessage("error.rent.notAvailable", new Object[]{}));
-        }
+        validate(!carStatus, "error.rent.notAvailable");
 
         List<RentCar> rentedCarList = rentCarRepository.findByCarId(carId);
         int rentCountByCar = rentedCarList.size();
@@ -130,8 +127,7 @@ public class RentCarServiceImpl implements RentCarService {
 
     @Override
     public List<RentCar> getByCarId(Long carId) {
-        if (carId == null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.rent.unexpectedCarId", new Object[]{}));
+        validate(carId == null, "error.rent.unexpectedCarId");
         List<RentCar> rentCars = rentCarRepository.findByCarId(carId, finishDate);
         if (rentCars.isEmpty())
             throw new EntityNotFoundException(localizedMessageSource.getMessage("error.rent.notFound", new Object[]{}));
@@ -140,8 +136,7 @@ public class RentCarServiceImpl implements RentCarService {
 
     @Override
     public List<RentCar> getByUserId(Long userId) {
-        if (userId == null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.rent.unexpectedUserId", new Object[]{}));
+        validate(userId == null, "error.rent.unexpectedUserId");
         List<RentCar> rentCars = rentCarRepository.findByUserId(userId, finishDate);
         if (rentCars.isEmpty())
             throw new EntityNotFoundException(localizedMessageSource.getMessage("error.rent.notFound", new Object[]{}));
@@ -168,5 +163,10 @@ public class RentCarServiceImpl implements RentCarService {
 
     }
 
-
+    private void validate(boolean expression, String messageCode) {
+        if (expression) {
+            String errorMessage = localizedMessageSource.getMessage(messageCode, new Object[]{});
+            throw new NullPointerException(errorMessage);
+        }
+    }
 }

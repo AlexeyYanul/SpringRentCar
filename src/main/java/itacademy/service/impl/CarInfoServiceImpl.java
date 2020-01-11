@@ -42,8 +42,7 @@ public class CarInfoServiceImpl implements CarInfoService {
 
     @Override
     public CarInfo getById(Long id) {
-        if (id == null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.idIsNull", new Object[]{}));
+        validate(id == null, "error.idIsNull");
         Optional<CarInfo> carInfoOptional = carInfoRepository.findById(id);
         if (!carInfoOptional.isPresent())
             throw new EntityNotFoundException(localizedMessageSource.getMessage("error.carInfo.notFound", new Object[]{}));
@@ -52,11 +51,9 @@ public class CarInfoServiceImpl implements CarInfoService {
 
     @Override
     public CarInfo getByCarId(Long id) {
-        if (id == null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.carInfo.carIdIsNull", new Object[]{}));
+        validate(id == null, "error.carInfo.carIdIsNull");
         CarInfo carInfo = carInfoRepository.findByCarId(id);
-        if (carInfo == null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.carInfo.notFound", new Object[]{}));
+        validate(carInfo == null, "error.carInfo.notFound");
         return carInfo;
     }
 
@@ -72,13 +69,18 @@ public class CarInfoServiceImpl implements CarInfoService {
 
     private void checkDuplicateCarInfo(Long carId) {
         CarInfo carInfo = carInfoRepository.findByCarId(carId);
-        if (carInfo != null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.carInfo.notUnique", new Object[]{}));
+        validate(carInfo != null, "error.carInfo.notUnique");
     }
-
 
     public void deleteById(Long id) {
         getById(id);
         carInfoRepository.deleteById(id);
+    }
+
+    private void validate(boolean expression, String messageCode) {
+        if (expression) {
+            String errorMessage = localizedMessageSource.getMessage(messageCode, new Object[]{});
+            throw new NullPointerException(errorMessage);
+        }
     }
 }

@@ -1,8 +1,6 @@
 package itacademy.service;
 
 import itacademy.model.Car;
-import itacademy.model.enums.Body;
-import itacademy.model.enums.Gearbox;
 
 import java.util.List;
 

@@ -1,5 +1,6 @@
 package itacademy.dto;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -7,15 +8,18 @@ public class AddressDTO {
 
     private Long id;
 
-    @Size(min = 2, max = 20)
-    @NotNull
+    @NotNull(message = "{address.city.notNull}")
+    @NotEmpty(message = "{address.city.notEmpty}")
+    @Size(min = 2, max = 20, message = "{address.city.size}")
     private String city;
 
-    @Size(min = 2, max = 20)
-    @NotNull
+    @NotNull(message = "{address.street.notNull}")
+    @NotEmpty(message = "{address.street.notEmpty}")
+    @Size(min = 2, max = 20, message = "{address.street.size}")
     private String street;
 
-    @NotNull
+    @NotNull(message = "{address.home.notNull}")
+    @NotEmpty(message = "{address.home.notEmpty}")
     private Integer home;
 
     private Integer flat;

@@ -28,8 +28,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     public Address getById(Long id) {
-        if (id == null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.idIsNull", new Object[]{}));
+        validate(id == null, "error.idIsNull");
         Optional<Address> address = addressRepository.findById(id);
         if (!address.isPresent())
             throw new EntityNotFoundException(localizedMessageSource.getMessage("error.address.notFound", new Object[]{}));
@@ -37,8 +36,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     public List<Address> getByCity(String city) {
-        if (city.isEmpty())
-            throw new NullPointerException(localizedMessageSource.getMessage("error.address.cityIsNull", new Object[]{}));
+        validate(city.isEmpty(), "error.address.cityIsNull");
         List<Address> addresses = addressRepository.findByCity(city);
         if (addresses.isEmpty())
             throw new EntityNotFoundException(localizedMessageSource.getMessage("error.address.notFound", new Object[]{}));
@@ -46,8 +44,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     public List<Address> getByStreet(String street) {
-        if (street.isEmpty())
-            throw new NullPointerException(localizedMessageSource.getMessage("error.address.streetIsNull", new Object[]{}));
+        validate(street.isEmpty(), "error.address.streetIsNull");
         List<Address> addresses = addressRepository.findByStreet(street);
         if (addresses.isEmpty())
             throw new EntityNotFoundException(localizedMessageSource.getMessage("error.address.notFound", new Object[]{}));
@@ -64,33 +61,33 @@ public class AddressServiceImpl implements AddressService {
     }
 
     public Address saveAddress(Address address) {
-        if (address.getId() != null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.address.notHaveId", new Object[]{}));
+        validate(address.getId() != null, "error.address.notHaveId");
         checkDuplicate(address);
         return addressRepository.save(address);
     }
 
     @Override
     public void deleteById(Long id) {
-        if (id == null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.address.haveId", new Object[]{}));
-        Optional<Address> address = addressRepository.findById(id);
-        if (!address.isPresent())
-            throw new NullPointerException(localizedMessageSource.getMessage("error.address.notExist", new Object[]{}));
+        getById(id);
         addressRepository.deleteById(id);
     }
 
     @Override
     public Address updateAddress(Address address) {
-        if (address.getId() == null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.address.haveId", new Object[]{}));
+        validate(address.getId() == null, "error.address.haveId");
         checkDuplicate(address);
         return addressRepository.save(address);
     }
 
-    private void checkDuplicate(Address address){
+    private void checkDuplicate(Address address) {
         List<Address> duplicateAddress = getByExample(address);
-        if (!duplicateAddress.isEmpty())
-            throw new NullPointerException(localizedMessageSource.getMessage("error.address.notUnique", new Object[]{}));
+        validate(!duplicateAddress.isEmpty(), "error.address.notUnique");
+    }
+
+    private void validate(boolean expression, String messageCode) {
+        if (expression) {
+            String errorMessage = localizedMessageSource.getMessage(messageCode, new Object[]{});
+            throw new NullPointerException(errorMessage);
+        }
     }
 }

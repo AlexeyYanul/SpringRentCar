@@ -12,11 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.ws.Response;
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/rentCar")
@@ -78,7 +76,7 @@ public class RentCarController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<RentResponseDTO> requestRentCar(@RequestBody RentRequestDTO rentRequestDTO) {
+    public ResponseEntity<RentResponseDTO> requestRentCar(@Valid @RequestBody RentRequestDTO rentRequestDTO) {
         rentRequestDTO.setId(null);
         RentCar rentCar = rentCarService.requestRentCar(getRent(rentRequestDTO));
         RentResponseDTO rentResponseDTO = mapper.map(rentCar, RentResponseDTO.class);

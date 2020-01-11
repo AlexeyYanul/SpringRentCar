@@ -41,8 +41,7 @@ public class UserFinesServiceImpl implements UserFinesService {
 
     @Override
     public UserFines getById(Long id) {
-        if (id == null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.userFines.haveId", new Object[]{}));
+        validate(id == null, "error.userFines.haveId");
         Optional<UserFines> finesOptional = userFinesRepository.findById(id);
         if (!finesOptional.isPresent())
             throw new EntityNotFoundException(localizedMessageSource.getMessage("error.userFines.notFound", new Object[]{}));
@@ -51,8 +50,7 @@ public class UserFinesServiceImpl implements UserFinesService {
 
     @Override
     public List<UserFines> getFinesByStatus(Boolean status) {
-        if (status == null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.userFines.haveStatus", new Object[]{}));
+        validate(status == null, "error.userFines.haveStatus");
         List<UserFines> userFinesList = userFinesRepository.findByStatus(status);
         if (userFinesList.isEmpty())
             throw new EntityNotFoundException(localizedMessageSource.getMessage("error.userFines.notFound", new Object[]{}));
@@ -60,8 +58,7 @@ public class UserFinesServiceImpl implements UserFinesService {
     }
 
     public List<UserFines> getFinesByUserId(Long userId) {
-        if (userId == null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.userFines.unexpectedId", new Object[]{}));
+        validate(userId == null, "error.userFines.unexpectedId");
         List<UserFines> userFinesList = userFinesRepository.findByUserId(userId);
         if (userFinesList.isEmpty())
             throw new EntityNotFoundException(localizedMessageSource.getMessage("error.userFines.notFound", new Object[]{}));
@@ -69,8 +66,7 @@ public class UserFinesServiceImpl implements UserFinesService {
     }
 
     public UserFines saveUserFines(UserFines userFines) {
-        if (userFines.getId() != null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.userFines.notHaveId", new Object[]{}));
+        validate(userFines.getId() != null, "error.userFines.notHaveId");
         userFines.setUser(userService.getById(userFines.getUser().getId()));
         return userFinesRepository.save(userFines);
     }
@@ -86,5 +82,12 @@ public class UserFinesServiceImpl implements UserFinesService {
     public void deleteById(Long id) {
         getById(id);
         userFinesRepository.deleteById(id);
+    }
+
+    private void validate(boolean expression, String messageCode) {
+        if (expression) {
+            String errorMessage = localizedMessageSource.getMessage(messageCode, new Object[]{});
+            throw new NullPointerException(errorMessage);
+        }
     }
 }

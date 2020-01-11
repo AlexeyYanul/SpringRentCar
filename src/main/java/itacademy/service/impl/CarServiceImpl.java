@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import javax.validation.constraints.Null;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,8 +40,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car getById(Long id) {
-        if (id == null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.idIsNull", new Object[]{}));
+        validate(id == null, "error.idIsNull");
         Optional<Car> car = carRepository.findById(id);
         if (!car.isPresent()) {
             throw new EntityNotFoundException(localizedMessageSource.getMessage("error.car.notFound", new Object[]{}));
@@ -52,8 +50,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<Car> getByCarModelName(String name) {
-        if (name.isEmpty())
-            throw new NullPointerException(localizedMessageSource.getMessage("error.car.modelNameIsNull", new Object[]{}));
+        validate(name.isEmpty(), "error.car.modelNameIsNull");
         List<Car> carList = carRepository.findByCarModelName(name);
         if (carList.isEmpty())
             throw new EntityNotFoundException(localizedMessageSource.getMessage("error.car.notFound", new Object[]{}));
@@ -81,8 +78,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<Car> getByCarModelYear(Integer year) {
-        if (year == null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.car.modelYearIsNull", new Object[]{}));
+        validate(year == null, "error.car.modelYearIsNull");
         List<Car> carList = carRepository.findByCarModelYear(year);
         if (carList.isEmpty())
             throw new EntityNotFoundException(localizedMessageSource.getMessage("error.car.notFound", new Object[]{}));
@@ -122,8 +118,7 @@ public class CarServiceImpl implements CarService {
     }
 
     public Car updateCar(Car car) {
-        if (car.getId() == null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.car.haveId", new Object[]{}));
+        validate(car.getId() == null, "error.car.haveId");
         getById(car.getId());
         car.setCarModel(carModelService.getById(car.getCarModel().getId()));
         car.setEngine(engineService.getById(car.getEngine().getId()));
@@ -138,6 +133,13 @@ public class CarServiceImpl implements CarService {
     public List<Car> getByExample(Car car) {
         Example<Car> example = Example.of(car);
         return carRepository.findAll(example);
+    }
+
+    private void validate(boolean expression, String messageCode) {
+        if (expression) {
+            String errorMessage = localizedMessageSource.getMessage(messageCode, new Object[]{});
+            throw new NullPointerException(errorMessage);
+        }
     }
 
 }

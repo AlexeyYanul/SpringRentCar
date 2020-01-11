@@ -36,10 +36,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getByLoginAndPassword(String login, String password) {
-        if (login.isEmpty())
-            throw new NullPointerException(localizedMessageSource.getMessage("error.user.loginIsEmpty", new Object[]{}));
-        if (password.isEmpty())
-            throw new NullPointerException(localizedMessageSource.getMessage("error.user.passwordIsEmpty", new Object[]{}));
+        validate(login.isEmpty(), "error.user.loginIsEmpty");
+        validate(password.isEmpty(), "error.user.passwordIsEmpty");
         User responseUser = userRepository.findByLoginAndPassword(login, password);
         if (responseUser == null)
             throw new EntityNotFoundException(localizedMessageSource.getMessage("error.user.notFound", new Object[]{}));
@@ -48,8 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(Long id) {
-        if (id == null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.idIsNull", new Object[]{}));
+        validate(id == null, "error.idIsNull");
         Optional<User> user = userRepository.findById(id);
         if (!user.isPresent()) {
             throw new EntityNotFoundException(localizedMessageSource.getMessage("error.user.notFound", new Object[]{}));
@@ -68,8 +65,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getByCity(String city) {
-        if (city.isEmpty())
-            throw new NullPointerException(localizedMessageSource.getMessage("error.address.cityIsNull", new Object[]{}));
+        validate(city.isEmpty(), "error.address.cityIsNull");
         List<User> userList = userRepository.findByHomeAddressCity(city);
         if (userList.isEmpty())
             throw new EntityNotFoundException(localizedMessageSource.getMessage("error.user.notFound", new Object[]{}));
@@ -78,8 +74,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getByStreet(String street) {
-        if (street.isEmpty())
-            throw new NullPointerException(localizedMessageSource.getMessage("error.address.streetIsNull", new Object[]{}));
+        validate(street.isEmpty(), "error.address.streetIsNull");
         List<User> userList = userRepository.findByHomeAddressStreet(street);
         if (userList.isEmpty())
             throw new EntityNotFoundException(localizedMessageSource.getMessage("error.user.notFound", new Object[]{}));
@@ -88,10 +83,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getByCityAndStreet(String city, String street) {
-        if (city.isEmpty())
-            throw new NullPointerException(localizedMessageSource.getMessage("error.address.cityIsNull", new Object[]{}));
-        if (street.isEmpty())
-            throw new NullPointerException(localizedMessageSource.getMessage("error.address.streetIsNull", new Object[]{}));
+        validate(city.isEmpty(), "error.address.cityIsNull");
+        validate(street.isEmpty(), "error.address.streetIsNull");
         List<User> userList = userRepository.findByHomeAddressCityAndStreet(city, street);
         if (userList.isEmpty())
             throw new EntityNotFoundException(localizedMessageSource.getMessage("error.user.notFound", new Object[]{}));
@@ -100,8 +93,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getByLastName(String lastName) {
-        if (lastName.isEmpty())
-            throw new NullPointerException(localizedMessageSource.getMessage("error.user.lastNameIsEmpty", new Object[]{}));
+        validate(lastName.isEmpty(), "error.user.lastNameIsEmpty");
         List<User> userList = userRepository.findByLastName(lastName);
         if (userList.isEmpty())
             throw new EntityNotFoundException(localizedMessageSource.getMessage("error.user.notFound", new Object[]{}));
@@ -110,8 +102,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(User user) {
-        if (user.getId() != null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.user.notHaveId", new Object[]{}));
+        validate(user.getId() != null, "error.user.notHaveId");
         checkDuplicateLogin(user);
         Address homeAddress = user.getHomeAddress();
         List<Address> duplicateAddress = addressService.getByExample(homeAddress);
@@ -126,32 +117,33 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(User user) {
-        if (user.getId() == null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.user.notHaveId", new Object[]{}));
+        validate(user.getId() == null, "error.user.notHaveId");
         checkDuplicateUser(user);
+        Address homeAddress = user.getHomeAddress();
+        List<Address> duplicateAddress = addressService.getByExample(homeAddress);
+        if (!duplicateAddress.isEmpty()) {
+            Long duplicateAddressId = duplicateAddress.get(0).getId();
+            user.getHomeAddress().setId(duplicateAddressId);
+        } else {
+            addressService.saveAddress(homeAddress);
+        }
         return userRepository.save(user);
     }
 
     @Override
     public void deleteById(Long id) {
-        if (id == null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.user.haveId", new Object[]{}));
-        Optional<User> user = userRepository.findById(id);
-        if (!user.isPresent())
-            throw new NullPointerException(localizedMessageSource.getMessage("error.user.notExist", new Object[]{}));
+        getById(id);
         userRepository.deleteById(id);
     }
 
     private void checkDuplicateLogin(User user) {
-        if (userRepository.existsByLogin(user.getLogin()))
-            throw new NullPointerException(localizedMessageSource.getMessage("error.user.loginNotUnique", new Object[]{}));
+        String userLogin = user.getLogin();
+        validate(userRepository.existsByLogin(userLogin), "error.user.loginNotUnique");
     }
 
     private void checkDuplicateUser(User user) {
         List<User> duplicateUser = getByExample(user);
-        if (!duplicateUser.isEmpty()) {
-            throw new NullPointerException(localizedMessageSource.getMessage("error.user.notUnique", new Object[]{}));
-        }
+        validate(!duplicateUser.isEmpty(), "error.user.notUnique");
     }
 
     public List<User> getByExample(User user) {
@@ -159,4 +151,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll(example);
     }
 
+    private void validate(boolean expression, String messageCode) {
+        if (expression) {
+            String errorMessage = localizedMessageSource.getMessage(messageCode, new Object[]{});
+            throw new NullPointerException(errorMessage);
+        }
+    }
 }
