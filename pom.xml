@@ -16,11 +16,13 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <hibernate.version>5.4.5.Final</hibernate.version>
         <hibernate.validator>6.0.16.Final</hibernate.validator>
+        <postgres.version>9.1-901-1.jdbc4</postgres.version>
         <springframework.version>5.2.0.RELEASE</springframework.version>
         <springdatajpa.version>2.2.0.RELEASE</springdatajpa.version>
         <javax.servlet>4.0.1</javax.servlet>
         <jackson.core>2.9.9</jackson.core>
         <dozer>5.5.1</dozer>
+        <jjwt>0.9.1</jjwt>
     </properties>
 
     <dependencies>
@@ -45,7 +47,7 @@
         <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>9.1-901-1.jdbc4</version>
+            <version>${postgres.version}</version>
         </dependency>
 
         <!-- Spring core dependencies-->
@@ -90,6 +92,29 @@
             <artifactId>javax.servlet-api</artifactId>
             <version>${javax.servlet}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!--Spring security-->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${springframework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${springframework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${springframework.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jjwt}</version>
         </dependency>
 
         <!--JSON-->

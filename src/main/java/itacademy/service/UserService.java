@@ -8,6 +8,8 @@ import java.util.List;
 public interface UserService {
     User getByLoginAndPassword(String login, String password);
 
+    User getByLogin(String login);
+
     User getById(Long id);
 
     List<User> getAllUsers();

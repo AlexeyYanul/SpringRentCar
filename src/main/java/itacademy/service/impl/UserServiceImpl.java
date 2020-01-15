@@ -45,6 +45,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getByLogin(String login) {
+        return userRepository.findByLogin(login);
+    }
+
+    @Override
     public User getById(Long id) {
         validate(id == null, "error.idIsNull");
         Optional<User> user = userRepository.findById(id);
