@@ -16,6 +16,9 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type User service.
+ */
 @Service(value = "userService")
 @Transactional
 public class UserServiceImpl implements UserService {
@@ -26,6 +29,13 @@ public class UserServiceImpl implements UserService {
 
     private AddressService addressService;
 
+    /**
+     * Instantiates a new User service.
+     *
+     * @param repository             the repository
+     * @param localizedMessageSource the localized message source
+     * @param addressService         the address service
+     */
     @Autowired
     public UserServiceImpl(UserRepository repository, LocalizedMessageSource localizedMessageSource,
                            AddressService addressService) {
@@ -34,6 +44,13 @@ public class UserServiceImpl implements UserService {
         this.addressService = addressService;
     }
 
+    /**
+     * Gets by login and password.
+     *
+     * @param login    the user login
+     * @param password the user password
+     * @return the user
+     */
     @Override
     public User getByLoginAndPassword(String login, String password) {
         validate(login.isEmpty(), "error.user.loginIsEmpty");
@@ -44,11 +61,23 @@ public class UserServiceImpl implements UserService {
         return responseUser;
     }
 
+    /**
+     * Gets by login.
+     *
+     * @param login the user login
+     * @return the user
+     */
     @Override
     public User getByLogin(String login) {
         return userRepository.findByLogin(login);
     }
 
+    /**
+     * Gets by id.
+     *
+     * @param id the user id
+     * @return the user
+     */
     @Override
     public User getById(Long id) {
         validate(id == null, "error.idIsNull");
@@ -59,15 +88,32 @@ public class UserServiceImpl implements UserService {
         return user.get();
     }
 
+    /**
+     * Gets all users.
+     *
+     * @return the users list
+     */
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
+    /**
+     * Gets by role.
+     *
+     * @param role the user role
+     * @return the users list
+     */
     public List<User> getByRole(Role role) {
         return userRepository.findByRole(role);
     }
 
+    /**
+     * Gets by city.
+     *
+     * @param city the city name
+     * @return the users list
+     */
     @Override
     public List<User> getByCity(String city) {
         validate(city.isEmpty(), "error.address.cityIsNull");
@@ -77,6 +123,12 @@ public class UserServiceImpl implements UserService {
         return userList;
     }
 
+    /**
+     * Gets by street.
+     *
+     * @param street the street name
+     * @return the users list
+     */
     @Override
     public List<User> getByStreet(String street) {
         validate(street.isEmpty(), "error.address.streetIsNull");
@@ -86,6 +138,13 @@ public class UserServiceImpl implements UserService {
         return userList;
     }
 
+    /**
+     * Gets by city and street.
+     *
+     * @param city    the city name
+     * @param street the street name
+     * @return the users list
+     */
     @Override
     public List<User> getByCityAndStreet(String city, String street) {
         validate(city.isEmpty(), "error.address.cityIsNull");
@@ -96,6 +155,12 @@ public class UserServiceImpl implements UserService {
         return userList;
     }
 
+    /**
+     * Gets by last name.
+     *
+     * @param lastName the user last name
+     * @return the users list
+     */
     @Override
     public List<User> getByLastName(String lastName) {
         validate(lastName.isEmpty(), "error.user.lastNameIsEmpty");
@@ -105,6 +170,12 @@ public class UserServiceImpl implements UserService {
         return userList;
     }
 
+    /**
+     * Save user.
+     *
+     * @param user the user
+     * @return user
+     */
     @Override
     public User saveUser(User user) {
         validate(user.getId() != null, "error.user.notHaveId");
@@ -120,6 +191,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    /**
+     * Update user.
+     *
+     * @param user the user
+     * @return the user
+     */
     @Override
     public User updateUser(User user) {
         validate(user.getId() == null, "error.user.notHaveId");
@@ -135,22 +212,42 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    /**
+     * Delete.
+     *
+     * @param id the user id
+     */
     @Override
     public void deleteById(Long id) {
         getById(id);
         userRepository.deleteById(id);
     }
 
+    /**
+     * Check duplicate in the database by login.
+     *
+     * @param user the address
+     */
     private void checkDuplicateLogin(User user) {
         String userLogin = user.getLogin();
         validate(userRepository.existsByLogin(userLogin), "error.user.loginNotUnique");
     }
 
+    /**
+     * Check duplicate in the database by example.
+     *
+     * @param user the address
+     */
     private void checkDuplicateUser(User user) {
         List<User> duplicateUser = getByExample(user);
         validate(!duplicateUser.isEmpty(), "error.user.notUnique");
     }
 
+    /**
+     * Check users by example.
+     *
+     * @return users list
+     */
     public List<User> getByExample(User user) {
         Example<User> example = Example.of(user);
         return userRepository.findAll(example);

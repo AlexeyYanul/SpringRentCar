@@ -13,6 +13,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import javax.persistence.EntityNotFoundException;
 
+/**
+ * The type Rest exception handler.
+ */
 @ControllerAdvice(annotations = RestController.class)
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -26,6 +29,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Handle null pointer exception response entity.
+     *
+     * @param exception the exception
+     * @param request   the request
+     * @return the response entity
+     */
     @ExceptionHandler(value = NullPointerException.class)
     protected ResponseEntity<Object> handleNullPointerException(NullPointerException exception, WebRequest request) {
 
@@ -33,6 +43,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(exception, errorResponseDTO, new HttpHeaders(), errorResponseDTO.getHttpStatus(), request);
     }
 
+    /**
+     * Handle entity not found exception response entity.
+     *
+     * @param exception the exception
+     * @param request   the request
+     * @return the response entity
+     */
     @ExceptionHandler(value = EntityNotFoundException.class)
     protected ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException exception, WebRequest request) {
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(HttpStatus.NOT_FOUND, exception.getMessage());

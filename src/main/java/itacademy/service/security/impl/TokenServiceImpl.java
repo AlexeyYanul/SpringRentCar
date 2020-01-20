@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+/**
+ * The type Token service.
+ */
 @Service
 public class TokenServiceImpl implements TokenService {
 

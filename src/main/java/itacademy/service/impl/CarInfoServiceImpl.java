@@ -12,6 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
+/**
+ * The type Car info service.
+ */
 @Service(value = "carInfoService")
 @Transactional
 public class CarInfoServiceImpl implements CarInfoService {
@@ -22,6 +25,13 @@ public class CarInfoServiceImpl implements CarInfoService {
 
     private LocalizedMessageSource localizedMessageSource;
 
+    /**
+     * Instantiates a new Car info service.
+     *
+     * @param carInfoRepository      the car info repository
+     * @param carService             the car service
+     * @param localizedMessageSource the localized message source
+     */
     @Autowired
     public CarInfoServiceImpl(CarInfoRepository carInfoRepository, CarService carService,
                               LocalizedMessageSource localizedMessageSource) {
@@ -30,6 +40,12 @@ public class CarInfoServiceImpl implements CarInfoService {
         this.localizedMessageSource = localizedMessageSource;
     }
 
+    /**
+     * Save car info.
+     *
+     * @param carInfo the car info
+     * @return car info
+     */
     public CarInfo saveCarInfo(CarInfo carInfo) {
         if (carInfo.getId() != null)
             throw new NullPointerException(localizedMessageSource.getMessage("error.carInfo.notHaveId", new Object[]{}));
@@ -40,6 +56,12 @@ public class CarInfoServiceImpl implements CarInfoService {
         return carInfoRepository.save(carInfo);
     }
 
+    /**
+     * Gets by car info id.
+     *
+     * @param id the car info id
+     * @return the car info
+     */
     @Override
     public CarInfo getById(Long id) {
         validate(id == null, "error.idIsNull");
@@ -49,6 +71,12 @@ public class CarInfoServiceImpl implements CarInfoService {
         return carInfoOptional.get();
     }
 
+    /**
+     * Gets by car id.
+     *
+     * @param id the car id
+     * @return the car info
+     */
     @Override
     public CarInfo getByCarId(Long id) {
         validate(id == null, "error.carInfo.carIdIsNull");
@@ -57,6 +85,12 @@ public class CarInfoServiceImpl implements CarInfoService {
         return carInfo;
     }
 
+    /**
+     * Update car info.
+     *
+     * @param carInfo the car info
+     * @return the car info
+     */
     @Override
     public CarInfo updateCarInfo(CarInfo carInfo) {
         if (carInfo.getId() == null)
@@ -67,14 +101,24 @@ public class CarInfoServiceImpl implements CarInfoService {
         return carInfoRepository.save(carInfo);
     }
 
-    private void checkDuplicateCarInfo(Long carId) {
-        CarInfo carInfo = carInfoRepository.findByCarId(carId);
-        validate(carInfo != null, "error.carInfo.notUnique");
-    }
-
+    /**
+     * Delete.
+     *
+     * @param id the id
+     */
     public void deleteById(Long id) {
         getById(id);
         carInfoRepository.deleteById(id);
+    }
+
+    /**
+     * Check duplicate in the database.
+     *
+     * @param carId the car id
+     */
+    private void checkDuplicateCarInfo(Long carId) {
+        CarInfo carInfo = carInfoRepository.findByCarId(carId);
+        validate(carInfo != null, "error.carInfo.notUnique");
     }
 
     private void validate(boolean expression, String messageCode) {

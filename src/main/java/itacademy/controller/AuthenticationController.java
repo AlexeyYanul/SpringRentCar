@@ -11,16 +11,20 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-
+/**
+ * The type Authentication controller.
+ */
 @RestController
 @RequestMapping("/authentication")
 public class AuthenticationController {
     private final UserService userService;
-
 
     private final TokenService tokenService;
 
@@ -28,6 +32,14 @@ public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
 
+    /**
+     * Instantiates a new Authentication controller.
+     *
+     * @param userService           the user service
+     * @param tokenService          the token service
+     * @param encoder               the encoder
+     * @param authenticationManager the authentication manager
+     */
     public AuthenticationController(UserService userService, TokenService tokenService, PasswordEncoder encoder, AuthenticationManager authenticationManager) {
         this.userService = userService;
         this.tokenService = tokenService;
@@ -35,6 +47,12 @@ public class AuthenticationController {
         this.authenticationManager = authenticationManager;
     }
 
+    /**
+     * Authenticate user token response dto.
+     *
+     * @param requestDTO the request dto
+     * @return the token response dto
+     */
     @PostMapping("/signIn")
     public TokenResponseDTO authenticateUser(@RequestBody AuthenticationRequestDTO requestDTO) {
         UsernamePasswordAuthenticationToken token =
@@ -44,6 +62,12 @@ public class AuthenticationController {
         return new TokenResponseDTO(tokenService.generate(authentication));
     }
 
+    /**
+     * Register user user.
+     *
+     * @param userRegistrationRequestDTO the user registration request dto
+     * @return the user
+     */
     @PostMapping("/signUp")
     public User registerUser(@Valid @RequestBody UserRegistrationRequestDTO userRegistrationRequestDTO) {
         final User user = new User();

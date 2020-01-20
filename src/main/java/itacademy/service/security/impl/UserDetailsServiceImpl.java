@@ -12,11 +12,19 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * The type User details service.
+ */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserService userService;
 
+    /**
+     * Instantiates a new User details service.
+     *
+     * @param userService the user service
+     */
     public UserDetailsServiceImpl(UserService userService) {
         this.userService = userService;
     }

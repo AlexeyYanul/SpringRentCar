@@ -18,8 +18,6 @@ public class CarResponseDTO {
 
     private Integer seats;
 
-    private byte[] image;
-
     private CarModelDTO carModel;
 
     private EngineDTO engine;
@@ -62,14 +60,6 @@ public class CarResponseDTO {
 
     public void setSeats(Integer seats) {
         this.seats = seats;
-    }
-
-    public byte[] getImage() {
-        return image;
-    }
-
-    public void setImage(byte[] image) {
-        this.image = image;
     }
 
     public CarModelDTO getCarModel() {

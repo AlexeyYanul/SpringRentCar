@@ -17,6 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * The type Authentication token filter.
+ */
 public class AuthenticationTokenFilter extends OncePerRequestFilter {
 
     private static final String AUTHORIZATION = "Authorization";
@@ -25,6 +28,12 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
     private TokenService tokenService;
     private UserDetailsService userDetailsService;
 
+    /**
+     * Instantiates a new Authentication token filter.
+     *
+     * @param tokenService       the token service
+     * @param userDetailsService the user details service
+     */
     public AuthenticationTokenFilter(TokenService tokenService, UserDetailsService userDetailsService) {
         this.tokenService = tokenService;
         this.userDetailsService = userDetailsService;

@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * The type Car model controller.
+ */
 @RestController
 @RequestMapping("/carModels")
 public class CarModelController {
@@ -24,12 +27,24 @@ public class CarModelController {
 
     private LocalizedMessageSource localizedMessageSource;
 
+    /**
+     * Instantiates a new Car model controller.
+     *
+     * @param mapper                 the mapper
+     * @param carModelService        the car model service
+     * @param localizedMessageSource the localized message source
+     */
     public CarModelController(Mapper mapper, CarModelService carModelService, LocalizedMessageSource localizedMessageSource) {
         this.mapper = mapper;
         this.carModelService = carModelService;
         this.localizedMessageSource = localizedMessageSource;
     }
 
+    /**
+     * Gets all.
+     *
+     * @return the all
+     */
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<CarModelDTO>> getAll() {
         List<CarModel> carModels = carModelService.getCarModels();
@@ -39,6 +54,12 @@ public class CarModelController {
         return new ResponseEntity<>(carModelDTOs, HttpStatus.OK);
     }
 
+    /**
+     * Gets one.
+     *
+     * @param id the id
+     * @return the one
+     */
     @RequestMapping(value = "/find", method = RequestMethod.GET, params = {"id"})
     public ResponseEntity<CarModelDTO> getOne(@RequestParam Long id) {
         CarModel carModel = carModelService.getById(id);
@@ -46,6 +67,12 @@ public class CarModelController {
         return new ResponseEntity<>(carModelDTO, HttpStatus.OK);
     }
 
+    /**
+     * Save response entity.
+     *
+     * @param carModelDTO the car model dto
+     * @return the response entity
+     */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<CarModelDTO> save(@Valid @RequestBody CarModelDTO carModelDTO) {
         carModelDTO.setId(null);
@@ -55,6 +82,13 @@ public class CarModelController {
         return new ResponseEntity<>(responseCarModelDTO, HttpStatus.CREATED);
     }
 
+    /**
+     * Update response entity.
+     *
+     * @param carModelDTO the car model dto
+     * @param id          the id
+     * @return the response entity
+     */
     @RequestMapping(method = RequestMethod.PUT, params = {"id"})
     public ResponseEntity<CarModelDTO> update(@Valid @RequestBody CarModelDTO carModelDTO, @RequestParam Long id) {
         if (!Objects.equals(carModelDTO.getId(), id))
@@ -65,6 +99,11 @@ public class CarModelController {
         return new ResponseEntity<>(responseCarModelDTO, HttpStatus.OK);
     }
 
+    /**
+     * Delete.
+     *
+     * @param id the id
+     */
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE, params = {"id"})
     @ResponseStatus(HttpStatus.OK)
     public void delete(@RequestParam Long id) {

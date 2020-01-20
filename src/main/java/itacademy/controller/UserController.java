@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * The type User controller.
+ */
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -25,12 +28,24 @@ public class UserController {
 
     private LocalizedMessageSource localizedMessageSource;
 
+    /**
+     * Instantiates a new User controller.
+     *
+     * @param mapper                 the mapper
+     * @param userService            the user service
+     * @param localizedMessageSource the localized message source
+     */
     public UserController(Mapper mapper, UserService userService, LocalizedMessageSource localizedMessageSource) {
         this.mapper = mapper;
         this.userService = userService;
         this.localizedMessageSource = localizedMessageSource;
     }
 
+    /**
+     * Gets all.
+     *
+     * @return the all
+     */
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<UserDTO>> getAll() {
         List<User> users = userService.getAllUsers();
@@ -40,12 +55,23 @@ public class UserController {
         return new ResponseEntity<>(userDTOList, HttpStatus.OK);
     }
 
+    /**
+     * Delete.
+     *
+     * @param id the id
+     */
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void delete(@RequestParam Long id) {
         userService.deleteById(id);
     }
 
+    /**
+     * Save response entity.
+     *
+     * @param userDTO the user dto
+     * @return the response entity
+     */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<UserDTO> save(@Valid @RequestBody UserDTO userDTO) {
         userDTO.setId(null);
@@ -56,6 +82,13 @@ public class UserController {
         return new ResponseEntity<>(responseUserDTO, HttpStatus.OK);
     }
 
+    /**
+     * Update response entity.
+     *
+     * @param userDTO the user dto
+     * @param id      the id
+     * @return the response entity
+     */
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity<UserDTO> update(@Valid @RequestBody UserDTO userDTO, @RequestParam Long id) {
         if (!Objects.equals(id, userDTO.getId())) {
@@ -67,6 +100,12 @@ public class UserController {
         return new ResponseEntity<>(responseUserDTO, HttpStatus.OK);
     }
 
+    /**
+     * Gets one.
+     *
+     * @param id the id
+     * @return the one
+     */
     @RequestMapping(value = "/find", method = RequestMethod.GET, params = {"id"})
     public ResponseEntity<UserDTO> getOne(@RequestParam Long id) {
         User user = userService.getById(id);
@@ -74,6 +113,13 @@ public class UserController {
         return new ResponseEntity<>(responseUserDTO, HttpStatus.OK);
     }
 
+    /**
+     * Gets by login and password.
+     *
+     * @param login    the login
+     * @param password the password
+     * @return the by login and password
+     */
     @RequestMapping(value = "/find", method = RequestMethod.GET, params = {"login", "password"})
     public ResponseEntity<UserDTO> getByLoginAndPassword(@RequestParam String login,
                                                          @RequestParam String password) {
@@ -82,6 +128,12 @@ public class UserController {
         return new ResponseEntity<>(responseUserDTO, HttpStatus.OK);
     }
 
+    /**
+     * Gets by last name.
+     *
+     * @param lastName the last name
+     * @return the by last name
+     */
     @RequestMapping(value = "/find", method = RequestMethod.GET, params = {"lastName"})
     public ResponseEntity<List<UserDTO>> getByLastName(@RequestParam String lastName) {
         List<User> users = userService.getByLastName(lastName);
@@ -91,6 +143,12 @@ public class UserController {
         return new ResponseEntity<>(userDTOList, HttpStatus.OK);
     }
 
+    /**
+     * Gets by address city.
+     *
+     * @param cityName the city name
+     * @return the by address city
+     */
     @RequestMapping(value = "/find", method = RequestMethod.GET, params = {"city"})
     public ResponseEntity<List<UserDTO>> getByAddressCity(@RequestParam(name = "city") String cityName) {
         List<User> users = userService.getByCity(cityName);
@@ -100,6 +158,12 @@ public class UserController {
         return new ResponseEntity<>(userDTOList, HttpStatus.OK);
     }
 
+    /**
+     * Gets by address street.
+     *
+     * @param streetName the street name
+     * @return the by address street
+     */
     @RequestMapping(value = "/find", method = RequestMethod.GET, params = "street")
     public ResponseEntity<List<UserDTO>> getByAddressStreet(@RequestParam(name = "street") String streetName) {
         List<User> users = userService.getByStreet(streetName);
@@ -109,6 +173,13 @@ public class UserController {
         return new ResponseEntity<>(userDTOList, HttpStatus.OK);
     }
 
+    /**
+     * Gets by address city and street.
+     *
+     * @param city   the city
+     * @param street the street
+     * @return the by address city and street
+     */
     @RequestMapping(value = "/find", method = RequestMethod.GET, params = {"city", "street"})
     public ResponseEntity<List<UserDTO>> getByAddressCityAndStreet(@RequestParam String city,
                                                                    @RequestParam String street) {
@@ -119,6 +190,12 @@ public class UserController {
         return new ResponseEntity<>(userDTOList, HttpStatus.OK);
     }
 
+    /**
+     * Gets by role.
+     *
+     * @param role the role
+     * @return the by role
+     */
     @RequestMapping(value = "/find", method = RequestMethod.GET, params = "role")
     public ResponseEntity<List<UserDTO>> getByRole(@RequestParam Role role) {
         List<User> users = userService.getByRole(role);

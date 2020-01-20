@@ -23,6 +23,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Rent car service.
+ */
 @Service(value = "rentCarService")
 @Transactional
 public class RentCarServiceImpl implements RentCarService {
@@ -39,6 +42,15 @@ public class RentCarServiceImpl implements RentCarService {
 
     private LocalizedMessageSource localizedMessageSource;
 
+    /**
+     * Instantiates a new Rent car service.
+     *
+     * @param rentCarRepository      the rent car repository
+     * @param carInfoService         the car info service
+     * @param carService             the car service
+     * @param userService            the user service
+     * @param localizedMessageSource the localized message source
+     */
     @Autowired
     public RentCarServiceImpl(RentCarRepository rentCarRepository, CarInfoService carInfoService,
                               CarService carService, UserService userService,
@@ -50,6 +62,12 @@ public class RentCarServiceImpl implements RentCarService {
         this.localizedMessageSource = localizedMessageSource;
     }
 
+    /**
+     * Gets by id.
+     *
+     * @param id the rent id
+     * @return the rent
+     */
     @Override
     public RentCar getById(Long id) {
         validate(id == null, "error.rent.haveId");
@@ -60,6 +78,12 @@ public class RentCarServiceImpl implements RentCarService {
         return rentCar.get();
     }
 
+    /**
+     * Save request rent car.
+     *
+     * @param rentCar the rent request
+     * @return the rent
+     */
     @Override
     public RentCar requestRentCar(RentCar rentCar) {
         User renter = userService.getById(rentCar.getUser().getId());
@@ -90,6 +114,12 @@ public class RentCarServiceImpl implements RentCarService {
         return rentCarRepository.save(rentCar);
     }
 
+    /**
+     * Accept rent car.
+     *
+     * @param id the rent id
+     * @return the rent
+     */
     @Override
     public RentCar acceptRequest(Long id) {
         RentCar rentRequest = getById(id);
@@ -97,6 +127,12 @@ public class RentCarServiceImpl implements RentCarService {
         return rentCarRepository.save(rentRequest);
     }
 
+    /**
+     * Finish rent car.
+     *
+     * @param id the rent id
+     * @return the rent
+     */
     @Override
     public RentCar finishRentCar(Long id) {
         RentCar rentRequest = getById(id);
@@ -104,6 +140,12 @@ public class RentCarServiceImpl implements RentCarService {
         return rentCarRepository.save(rentRequest);
     }
 
+    /**
+     * Cancel rent car.
+     *
+     * @param id the rent id
+     * @return the rent
+     */
     @Override
     public RentCar cancelRequest(Long id) {
         RentCar rentRequest = getById(id);
@@ -111,6 +153,12 @@ public class RentCarServiceImpl implements RentCarService {
         return rentCarRepository.save(rentRequest);
     }
 
+    /**
+     * Gets by status.
+     *
+     * @param status the rent status
+     * @return the rents list
+     */
     @Override
     public List<RentCar> getByStatus(String status) {
         List<RentCar> rentCars;
@@ -125,6 +173,12 @@ public class RentCarServiceImpl implements RentCarService {
         return rentCars;
     }
 
+    /**
+     * Gets by car id.
+     *
+     * @param carId the rented car id
+     * @return the rents list
+     */
     @Override
     public List<RentCar> getByCarId(Long carId) {
         validate(carId == null, "error.rent.unexpectedCarId");
@@ -134,6 +188,12 @@ public class RentCarServiceImpl implements RentCarService {
         return rentCars;
     }
 
+    /**
+     * Gets by user id.
+     *
+     * @param userId the renter id
+     * @return the rents list
+     */
     @Override
     public List<RentCar> getByUserId(Long userId) {
         validate(userId == null, "error.rent.unexpectedUserId");
@@ -143,11 +203,21 @@ public class RentCarServiceImpl implements RentCarService {
         return rentCars;
     }
 
+    /**
+     * Gets all.
+     *
+     * @return the rents list
+     */
     @Override
     public List<RentCar> getAll() {
         return rentCarRepository.findAll();
     }
 
+    /**
+     * Count bill.
+     *
+     * @return the rent bill
+     */
     private BigDecimal countBill(RentCar rentCar) {
         LocalDateTime startDate = rentCar.getStartDate();
         LocalDateTime finishDate = rentCar.getFinishDate();

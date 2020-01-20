@@ -5,11 +5,16 @@ import org.dozer.DozerConverter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * The type Local date time converter.
+ */
 public class LocalDateTimeConverter extends DozerConverter<LocalDateTime, String> {
-
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
+    /**
+     * Instantiates a new Local date time converter.
+     */
     public LocalDateTimeConverter() {
         super(LocalDateTime.class, String.class);
     }

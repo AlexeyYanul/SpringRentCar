@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Objects;
 
+/**
+ * The type Car info controller.
+ */
 @RestController
 @RequestMapping("/carInfo")
 public class CarInfoController {
@@ -24,12 +27,25 @@ public class CarInfoController {
 
     private LocalizedMessageSource localizedMessageSource;
 
+    /**
+     * Instantiates a new Car info controller.
+     *
+     * @param carInfoService         the car info service
+     * @param mapper                 the mapper
+     * @param localizedMessageSource the localized message source
+     */
     public CarInfoController(CarInfoService carInfoService, Mapper mapper, LocalizedMessageSource localizedMessageSource) {
         this.carInfoService = carInfoService;
         this.mapper = mapper;
         this.localizedMessageSource = localizedMessageSource;
     }
 
+    /**
+     * Gets one.
+     *
+     * @param id the id
+     * @return the one
+     */
     @RequestMapping(method = RequestMethod.GET, params = {"id"})
     public ResponseEntity<CarInfoResponseDTO> getOne(@RequestParam Long id) {
         CarInfo carInfo = carInfoService.getById(id);
@@ -37,6 +53,12 @@ public class CarInfoController {
         return new ResponseEntity<>(carInfoResponseDTO, HttpStatus.OK);
     }
 
+    /**
+     * Gets by car id.
+     *
+     * @param carId the car id
+     * @return the by car id
+     */
     @RequestMapping(method = RequestMethod.GET, params = {"carId"})
     public ResponseEntity<CarInfoResponseDTO> getByCarId(@RequestParam Long carId) {
         CarInfo carInfo = carInfoService.getByCarId(carId);
@@ -44,12 +66,23 @@ public class CarInfoController {
         return new ResponseEntity<>(carInfoResponseDTO, HttpStatus.OK);
     }
 
+    /**
+     * Delete.
+     *
+     * @param id the id
+     */
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE, params = {"id"})
     @ResponseStatus(HttpStatus.OK)
     public void delete(@RequestParam Long id) {
         carInfoService.deleteById(id);
     }
 
+    /**
+     * Save response entity.
+     *
+     * @param carInfoRequestDTO the car info request dto
+     * @return the response entity
+     */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<CarInfoResponseDTO> save(@Valid @RequestBody CarInfoRequestDTO carInfoRequestDTO) {
         carInfoRequestDTO.setId(null);
@@ -58,6 +91,13 @@ public class CarInfoController {
         return new ResponseEntity<>(carInfoResponseDTO, HttpStatus.CREATED);
     }
 
+    /**
+     * Update response entity.
+     *
+     * @param carInfoRequestDTO the car info request dto
+     * @param id                the id
+     * @return the response entity
+     */
     @RequestMapping(method = RequestMethod.PUT, params = {"id"})
     public ResponseEntity<CarInfoResponseDTO> update(@Valid @RequestBody CarInfoRequestDTO carInfoRequestDTO,
                                                      @RequestParam Long id) {

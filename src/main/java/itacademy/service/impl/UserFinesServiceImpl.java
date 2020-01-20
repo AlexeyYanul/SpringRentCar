@@ -14,6 +14,9 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type User fines service.
+ */
 @Service(value = "userFinesService")
 @Transactional
 public class UserFinesServiceImpl implements UserFinesService {
@@ -24,6 +27,13 @@ public class UserFinesServiceImpl implements UserFinesService {
 
     private LocalizedMessageSource localizedMessageSource;
 
+    /**
+     * Instantiates a new User fines service.
+     *
+     * @param userFinesRepository    the user fines repository
+     * @param localizedMessageSource the localized message source
+     * @param userService            the user service
+     */
     @Autowired
     public UserFinesServiceImpl(UserFinesRepository userFinesRepository,
                                 LocalizedMessageSource localizedMessageSource,
@@ -33,12 +43,23 @@ public class UserFinesServiceImpl implements UserFinesService {
         this.localizedMessageSource = localizedMessageSource;
     }
 
+    /**
+     * Gets all.
+     *
+     * @return the users fines list
+     */
     @Override
     public List<UserFines> getAllFines() {
         Sort sort = Sort.by("user");
         return userFinesRepository.findAll(sort);
     }
 
+    /**
+     * Gets by id.
+     *
+     * @param id the user fine id
+     * @return the user fine
+     */
     @Override
     public UserFines getById(Long id) {
         validate(id == null, "error.userFines.haveId");
@@ -48,6 +69,12 @@ public class UserFinesServiceImpl implements UserFinesService {
         return finesOptional.get();
     }
 
+    /**
+     * Gets by status.
+     *
+     * @param status the user fine status
+     * @return the user fine
+     */
     @Override
     public List<UserFines> getFinesByStatus(Boolean status) {
         validate(status == null, "error.userFines.haveStatus");
@@ -57,6 +84,12 @@ public class UserFinesServiceImpl implements UserFinesService {
         return userFinesList;
     }
 
+    /**
+     * Gets by user id.
+     *
+     * @param userId the user id
+     * @return the user fines
+     */
     public List<UserFines> getFinesByUserId(Long userId) {
         validate(userId == null, "error.userFines.unexpectedId");
         List<UserFines> userFinesList = userFinesRepository.findByUserId(userId);
@@ -65,19 +98,36 @@ public class UserFinesServiceImpl implements UserFinesService {
         return userFinesList;
     }
 
+    /**
+     * Save user Fines.
+     *
+     * @param userFines the user fines
+     * @return the user fines
+     */
     public UserFines saveUserFines(UserFines userFines) {
         validate(userFines.getId() != null, "error.userFines.notHaveId");
         userFines.setUser(userService.getById(userFines.getUser().getId()));
         return userFinesRepository.save(userFines);
     }
 
-
+    /**
+     * Update user Fines.
+     *
+     * @param userFines the user fines
+     * @return the user fines
+     */
     public UserFines updateUserFines(UserFines userFines) {
         getById(userFines.getId());
         userFines.setUser(userService.getById(userFines.getUser().getId()));
         return userFinesRepository.save(userFines);
     }
 
+
+    /**
+     * Delete.
+     *
+     * @param id the user fines id
+     */
     @Override
     public void deleteById(Long id) {
         getById(id);

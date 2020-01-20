@@ -13,6 +13,9 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Address service.
+ */
 @Service(value = "addressService")
 @Transactional
 public class AddressServiceImpl implements AddressService {
@@ -21,12 +24,24 @@ public class AddressServiceImpl implements AddressService {
 
     private LocalizedMessageSource localizedMessageSource;
 
+    /**
+     * Instantiates a new Address service.
+     *
+     * @param addressRepository      the address repository
+     * @param localizedMessageSource the localized message source
+     */
     @Autowired
     public AddressServiceImpl(AddressRepository addressRepository, LocalizedMessageSource localizedMessageSource) {
         this.addressRepository = addressRepository;
         this.localizedMessageSource = localizedMessageSource;
     }
 
+    /**
+     * Gets address by id.
+     *
+     * @param id the id
+     * @return the address
+     */
     public Address getById(Long id) {
         validate(id == null, "error.idIsNull");
         Optional<Address> address = addressRepository.findById(id);
@@ -35,6 +50,12 @@ public class AddressServiceImpl implements AddressService {
         return address.get();
     }
 
+    /**
+     * Gets address by city.
+     *
+     * @param city the city name
+     * @return the addresses list
+     */
     public List<Address> getByCity(String city) {
         validate(city.isEmpty(), "error.address.cityIsNull");
         List<Address> addresses = addressRepository.findByCity(city);
@@ -43,6 +64,12 @@ public class AddressServiceImpl implements AddressService {
         return addresses;
     }
 
+    /**
+     * Gets address by street.
+     *
+     * @param street the street name
+     * @return the addresses list
+     */
     public List<Address> getByStreet(String street) {
         validate(street.isEmpty(), "error.address.streetIsNull");
         List<Address> addresses = addressRepository.findByStreet(street);
@@ -51,6 +78,11 @@ public class AddressServiceImpl implements AddressService {
         return addresses;
     }
 
+    /**
+     * Gets all addresses.
+     *
+     * @return the addresses list
+     */
     public List<Address> getAllAddresses() {
         return addressRepository.findAll();
     }
@@ -60,18 +92,35 @@ public class AddressServiceImpl implements AddressService {
         return addressRepository.findAll(addressExample);
     }
 
+    /**
+     * Save address.
+     *
+     * @param address the address
+     * @return the address
+     */
     public Address saveAddress(Address address) {
         validate(address.getId() != null, "error.address.notHaveId");
         checkDuplicate(address);
         return addressRepository.save(address);
     }
 
+    /**
+     * Delete.
+     *
+     * @param id the id
+     */
     @Override
     public void deleteById(Long id) {
         getById(id);
         addressRepository.deleteById(id);
     }
 
+    /**
+     * Update response entity.
+     *
+     * @param address the address
+     * @return the address
+     */
     @Override
     public Address updateAddress(Address address) {
         validate(address.getId() == null, "error.address.haveId");
@@ -79,6 +128,11 @@ public class AddressServiceImpl implements AddressService {
         return addressRepository.save(address);
     }
 
+    /**
+     * Check duplicate in the database.
+     *
+     * @param address the address
+     */
     private void checkDuplicate(Address address) {
         List<Address> duplicateAddress = getByExample(address);
         validate(!duplicateAddress.isEmpty(), "error.address.notUnique");

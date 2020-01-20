@@ -1,6 +1,5 @@
 package itacademy.configuration;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
@@ -16,6 +15,9 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
+/**
+ * The type Database config.
+ */
 @EnableJpaRepositories(basePackages = "itacademy.repository")
 @EnableTransactionManagement
 @PropertySource(value = "classpath:database.properties")
@@ -37,8 +39,13 @@ public class DatabaseConfig {
     @Value("${hibernate.format_sql}")
     private String hibernateFormatSql;
 
+    /**
+     * Data source data source.
+     *
+     * @return the data source
+     */
     @Bean
-    public DataSource dataSource(){
+    public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(jdbcDriverClassName);
         dataSource.setUrl(jdbcUrl);
@@ -47,7 +54,7 @@ public class DatabaseConfig {
         return dataSource;
     }
 
-    private Properties properties(){
+    private Properties properties() {
         Properties properties = new Properties();
         properties.put("hibernate.dialect", hibernateDialect);
         properties.put("hibernate.show_sql", hibernateShowSql);
@@ -55,8 +62,13 @@ public class DatabaseConfig {
         return properties;
     }
 
+    /**
+     * Entity manager factory local container entity manager factory bean.
+     *
+     * @return the local container entity manager factory bean
+     */
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(){
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactory.setJpaProperties(properties());
         entityManagerFactory.setDataSource(dataSource());
@@ -66,10 +78,15 @@ public class DatabaseConfig {
         return entityManagerFactory;
     }
 
+    /**
+     * Transaction manager platform transaction manager.
+     *
+     * @param emf the emf
+     * @return the platform transaction manager
+     */
     @Bean
-    public PlatformTransactionManager transactionManager(EntityManagerFactory emf){
+    public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
         return new JpaTransactionManager(emf);
     }
-
 
 }

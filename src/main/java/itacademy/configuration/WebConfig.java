@@ -20,14 +20,27 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Web config.
+ */
 @EnableWebMvc
 public class WebConfig {
 
+    /**
+     * Password encoder password encoder.
+     *
+     * @return the password encoder
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Mapper mapper.
+     *
+     * @return the mapper
+     */
     @Bean
     public Mapper mapper() {
         DozerBeanMapper dozerBeanMapper = new DozerBeanMapper();

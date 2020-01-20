@@ -17,6 +17,9 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Car service.
+ */
 @Service(value = "carService")
 @Transactional
 public class CarServiceImpl implements CarService {
@@ -29,6 +32,14 @@ public class CarServiceImpl implements CarService {
 
     private LocalizedMessageSource localizedMessageSource;
 
+    /**
+     * Instantiates a new Car service.
+     *
+     * @param carRepository          the car repository
+     * @param localizedMessageSource the localized message source
+     * @param carModelService        the car model service
+     * @param engineService          the engine service
+     */
     @Autowired
     public CarServiceImpl(CarRepository carRepository, LocalizedMessageSource localizedMessageSource,
                           CarModelService carModelService, EngineService engineService) {
@@ -38,6 +49,12 @@ public class CarServiceImpl implements CarService {
         this.localizedMessageSource = localizedMessageSource;
     }
 
+    /**
+     * Gets by id.
+     *
+     * @param id the car id
+     * @return the car
+     */
     @Override
     public Car getById(Long id) {
         validate(id == null, "error.idIsNull");
@@ -48,6 +65,12 @@ public class CarServiceImpl implements CarService {
         return car.get();
     }
 
+    /**
+     * Gets by car model name.
+     *
+     * @param name the car model name
+     * @return the cars list
+     */
     @Override
     public List<Car> getByCarModelName(String name) {
         validate(name.isEmpty(), "error.car.modelNameIsNull");
@@ -57,6 +80,12 @@ public class CarServiceImpl implements CarService {
         return carList;
     }
 
+    /**
+     * Gets by car body type.
+     *
+     * @param bodyType the car body type
+     * @return the cars list
+     */
     @Override
     public List<Car> getByBody(String bodyType) {
         List<Car> carList;
@@ -71,11 +100,22 @@ public class CarServiceImpl implements CarService {
         return carList;
     }
 
+    /**
+     * Gets all free cars.
+     *
+     * @return the cars list
+     */
     @Override
     public List<Car> getAllFreeCars() {
         return carRepository.findByCarInfoStatus(true);
     }
 
+    /**
+     * Gets by car year.
+     *
+     * @param year the car year
+     * @return the cars list
+     */
     @Override
     public List<Car> getByCarModelYear(Integer year) {
         validate(year == null, "error.car.modelYearIsNull");
@@ -85,6 +125,12 @@ public class CarServiceImpl implements CarService {
         return carList;
     }
 
+    /**
+     * Gets by car gearbox type.
+     *
+     * @param gearboxType the car gearbox type
+     * @return the cars list
+     */
     @Override
     public List<Car> getByGearbox(String gearboxType) {
         List<Car> carList;
@@ -99,11 +145,22 @@ public class CarServiceImpl implements CarService {
         return carList;
     }
 
+    /**
+     * Gets all cars.
+     *
+     * @return the cars list
+     */
     @Override
     public List<Car> getAllCars() {
         return carRepository.findAll();
     }
 
+    /**
+     * Save car.
+     *
+     * @param car the car
+     * @return the car
+     */
     @Override
     public Car saveCar(Car car) {
         if (car.getId() != null)
@@ -117,6 +174,12 @@ public class CarServiceImpl implements CarService {
         return carRepository.save(car);
     }
 
+    /**
+     * Update car.
+     *
+     * @param car the car
+     * @return the car
+     */
     public Car updateCar(Car car) {
         validate(car.getId() == null, "error.car.haveId");
         getById(car.getId());
@@ -125,11 +188,22 @@ public class CarServiceImpl implements CarService {
         return carRepository.save(car);
     }
 
+    /**
+     * Delete.
+     *
+     * @param id the id
+     */
     public void deleteCar(Long id) {
         getById(id);
         carRepository.deleteById(id);
     }
 
+    /**
+     * Gets by car example.
+     *
+     * @param car the car example
+     * @return the cars list
+     */
     public List<Car> getByExample(Car car) {
         Example<Car> example = Example.of(car);
         return carRepository.findAll(example);
