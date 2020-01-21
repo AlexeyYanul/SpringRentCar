@@ -12,7 +12,6 @@ public class CarModelDTO {
     private String name;
 
     @NotNull(message = "{carModel.year.notNull}")
-    @NotEmpty(message = "{carModel.year.notEmpty}")
     private Integer year;
 
     public Long getId() {

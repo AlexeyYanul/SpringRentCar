@@ -169,7 +169,7 @@ public class CarController {
     public ResponseEntity<CarResponseDTO> update(@Valid @RequestBody CarRequestDTO carRequestDTO,
                                                  @RequestParam Long id) {
         if (!Objects.equals(id, carRequestDTO.getId()))
-            throw new NullPointerException(localizedMessageSource.getMessage("error.car.unexpectedId", new Object[]{}));
+            throw new RuntimeException(localizedMessageSource.getMessage("error.car.unexpectedId", new Object[]{}));
         Car updateCar = carService.updateCar(getCar(carRequestDTO));
         CarResponseDTO carResponseDTO = mapper.map(updateCar, CarResponseDTO.class);
         return new ResponseEntity<>(carResponseDTO, HttpStatus.OK);

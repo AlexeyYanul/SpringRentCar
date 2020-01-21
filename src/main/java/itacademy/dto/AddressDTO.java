@@ -19,7 +19,6 @@ public class AddressDTO {
     private String street;
 
     @NotNull(message = "{address.home.notNull}")
-    @NotEmpty(message = "{address.home.notEmpty}")
     private Integer home;
 
     private Integer flat;

@@ -59,9 +59,7 @@ public class CarServiceImpl implements CarService {
     public Car getById(Long id) {
         validate(id == null, "error.idIsNull");
         Optional<Car> car = carRepository.findById(id);
-        if (!car.isPresent()) {
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.car.notFound", new Object[]{}));
-        }
+        validate(!car.isPresent(), "error.car.notFound");
         return car.get();
     }
 
@@ -75,8 +73,7 @@ public class CarServiceImpl implements CarService {
     public List<Car> getByCarModelName(String name) {
         validate(name.isEmpty(), "error.car.modelNameIsNull");
         List<Car> carList = carRepository.findByCarModelName(name);
-        if (carList.isEmpty())
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.car.notFound", new Object[]{}));
+        validate(carList.isEmpty(), "error.car.notFound");
         return carList;
     }
 
@@ -93,10 +90,9 @@ public class CarServiceImpl implements CarService {
             Body body = Body.valueOf(bodyType);
             carList = carRepository.findByBody(body);
         } catch (IllegalArgumentException exception) {
-            throw new NullPointerException(localizedMessageSource.getMessage("error.car.unexpectedBodyType", new Object[]{}));
+            throw new RuntimeException(localizedMessageSource.getMessage("error.car.unexpectedBodyType", new Object[]{}));
         }
-        if (carList.isEmpty())
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.car.notFound", new Object[]{}));
+        validate(carList.isEmpty(), "error.car.notFound");
         return carList;
     }
 
@@ -120,8 +116,7 @@ public class CarServiceImpl implements CarService {
     public List<Car> getByCarModelYear(Integer year) {
         validate(year == null, "error.car.modelYearIsNull");
         List<Car> carList = carRepository.findByCarModelYear(year);
-        if (carList.isEmpty())
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.car.notFound", new Object[]{}));
+        validate(carList.isEmpty(), "error.car.notFound");
         return carList;
     }
 
@@ -140,8 +135,7 @@ public class CarServiceImpl implements CarService {
         } catch (IllegalArgumentException exception) {
             throw new NullPointerException(localizedMessageSource.getMessage("error.car.unexpectedGearboxType", new Object[]{}));
         }
-        if (carList.isEmpty())
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.car.notFound", new Object[]{}));
+        validate(carList.isEmpty(), "error.car.notFound");
         return carList;
     }
 
@@ -212,7 +206,7 @@ public class CarServiceImpl implements CarService {
     private void validate(boolean expression, String messageCode) {
         if (expression) {
             String errorMessage = localizedMessageSource.getMessage(messageCode, new Object[]{});
-            throw new NullPointerException(errorMessage);
+            throw new RuntimeException(errorMessage);
         }
     }
 

@@ -125,7 +125,7 @@ public class UserFinesController {
     public ResponseEntity<UserFinesResponseDTO> update(@Valid @RequestBody UserFinesRequestDTO userFinesRequestDTO,
                                                        @RequestParam Long id) {
         if (!Objects.equals(id, userFinesRequestDTO.getId()))
-            throw new NullPointerException(localizedMessageSource.getMessage("error.userFines.unexpectedId", new Object[]{}));
+            throw new RuntimeException(localizedMessageSource.getMessage("error.userFines.unexpectedId", new Object[]{}));
         UserFines userFines = userFinesService.updateUserFines(getUserFines(userFinesRequestDTO));
         UserFinesResponseDTO userFinesResponseDTO = mapper.map(userFines, UserFinesResponseDTO.class);
         return new ResponseEntity<>(userFinesResponseDTO, HttpStatus.OK);

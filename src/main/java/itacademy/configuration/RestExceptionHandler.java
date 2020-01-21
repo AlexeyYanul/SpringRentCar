@@ -30,29 +30,16 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
-     * Handle null pointer exception response entity.
+     * Handle runtime exception response entity.
      *
      * @param exception the exception
      * @param request   the request
      * @return the response entity
      */
-    @ExceptionHandler(value = NullPointerException.class)
-    protected ResponseEntity<Object> handleNullPointerException(NullPointerException exception, WebRequest request) {
+    @ExceptionHandler(value = RuntimeException.class)
+    protected ResponseEntity<Object> handleRuntimeException(RuntimeException exception, WebRequest request) {
 
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(HttpStatus.BAD_REQUEST, exception.getMessage());
-        return handleExceptionInternal(exception, errorResponseDTO, new HttpHeaders(), errorResponseDTO.getHttpStatus(), request);
-    }
-
-    /**
-     * Handle entity not found exception response entity.
-     *
-     * @param exception the exception
-     * @param request   the request
-     * @return the response entity
-     */
-    @ExceptionHandler(value = EntityNotFoundException.class)
-    protected ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException exception, WebRequest request) {
-        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(HttpStatus.NOT_FOUND, exception.getMessage());
         return handleExceptionInternal(exception, errorResponseDTO, new HttpHeaders(), errorResponseDTO.getHttpStatus(), request);
     }
 }

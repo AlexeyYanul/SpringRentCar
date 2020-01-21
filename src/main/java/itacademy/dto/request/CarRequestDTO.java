@@ -24,15 +24,12 @@ public class CarRequestDTO {
     private Body body;
 
     @NotNull(message = "{car.seats.notNull}")
-    @NotEmpty(message = "{car.seats.notEmpty}")
     private Integer seats;
 
     @NotNull(message = "{car.model.notNull}")
-    @NotEmpty(message = "{car.model.notEmpty}")
     private Long CarModelId;
 
     @NotNull(message = "{car.engine.notNull}")
-    @NotEmpty(message = "{car.engine.notEmpty}")
     private Long engineId;
 
     public Long getId() {

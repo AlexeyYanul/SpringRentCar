@@ -45,8 +45,7 @@ public class AddressServiceImpl implements AddressService {
     public Address getById(Long id) {
         validate(id == null, "error.idIsNull");
         Optional<Address> address = addressRepository.findById(id);
-        if (!address.isPresent())
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.address.notFound", new Object[]{}));
+        validate(!address.isPresent(), "error.address.notFound" );
         return address.get();
     }
 
@@ -59,8 +58,7 @@ public class AddressServiceImpl implements AddressService {
     public List<Address> getByCity(String city) {
         validate(city.isEmpty(), "error.address.cityIsNull");
         List<Address> addresses = addressRepository.findByCity(city);
-        if (addresses.isEmpty())
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.address.notFound", new Object[]{}));
+        validate(addresses.isEmpty(), "error.address.notFound");
         return addresses;
     }
 
@@ -73,8 +71,7 @@ public class AddressServiceImpl implements AddressService {
     public List<Address> getByStreet(String street) {
         validate(street.isEmpty(), "error.address.streetIsNull");
         List<Address> addresses = addressRepository.findByStreet(street);
-        if (addresses.isEmpty())
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.address.notFound", new Object[]{}));
+        validate(addresses.isEmpty(), "error.address.notFound");
         return addresses;
     }
 
@@ -141,7 +138,7 @@ public class AddressServiceImpl implements AddressService {
     private void validate(boolean expression, String messageCode) {
         if (expression) {
             String errorMessage = localizedMessageSource.getMessage(messageCode, new Object[]{});
-            throw new NullPointerException(errorMessage);
+            throw new RuntimeException(errorMessage);
         }
     }
 }

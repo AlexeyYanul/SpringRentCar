@@ -47,8 +47,7 @@ public class CarInfoServiceImpl implements CarInfoService {
      * @return car info
      */
     public CarInfo saveCarInfo(CarInfo carInfo) {
-        if (carInfo.getId() != null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.carInfo.notHaveId", new Object[]{}));
+        validate(carInfo.getId() != null, "error.carInfo.notHaveId");
         if (carInfo.getCar() == null || carInfo.getCar().getId() == null)
             throw new NullPointerException(localizedMessageSource.getMessage("error.carInfo.carIsNull", new Object[]{}));
         carInfo.setCar(carService.getById(carInfo.getCar().getId()));
@@ -66,8 +65,7 @@ public class CarInfoServiceImpl implements CarInfoService {
     public CarInfo getById(Long id) {
         validate(id == null, "error.idIsNull");
         Optional<CarInfo> carInfoOptional = carInfoRepository.findById(id);
-        if (!carInfoOptional.isPresent())
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.carInfo.notFound", new Object[]{}));
+        validate(!carInfoOptional.isPresent(), "error.carInfo.notFound");
         return carInfoOptional.get();
     }
 
@@ -93,8 +91,7 @@ public class CarInfoServiceImpl implements CarInfoService {
      */
     @Override
     public CarInfo updateCarInfo(CarInfo carInfo) {
-        if (carInfo.getId() == null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.carInfo.haveId", new Object[]{}));
+        validate(carInfo.getId() == null, "error.carInfo.haveId");
         if (carInfo.getCar() == null || carInfo.getCar().getId() == null)
             throw new NullPointerException(localizedMessageSource.getMessage("error.carInfo.carIsNull", new Object[]{}));
         carInfo.setCar(carService.getById(carInfo.getCar().getId()));
@@ -124,7 +121,7 @@ public class CarInfoServiceImpl implements CarInfoService {
     private void validate(boolean expression, String messageCode) {
         if (expression) {
             String errorMessage = localizedMessageSource.getMessage(messageCode, new Object[]{});
-            throw new NullPointerException(errorMessage);
+            throw new RuntimeException(errorMessage);
         }
     }
 }

@@ -64,8 +64,7 @@ public class UserFinesServiceImpl implements UserFinesService {
     public UserFines getById(Long id) {
         validate(id == null, "error.userFines.haveId");
         Optional<UserFines> finesOptional = userFinesRepository.findById(id);
-        if (!finesOptional.isPresent())
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.userFines.notFound", new Object[]{}));
+        validate(!finesOptional.isPresent(), "error.userFines.notFound");
         return finesOptional.get();
     }
 
@@ -79,8 +78,7 @@ public class UserFinesServiceImpl implements UserFinesService {
     public List<UserFines> getFinesByStatus(Boolean status) {
         validate(status == null, "error.userFines.haveStatus");
         List<UserFines> userFinesList = userFinesRepository.findByStatus(status);
-        if (userFinesList.isEmpty())
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.userFines.notFound", new Object[]{}));
+        validate(userFinesList.isEmpty(), "error.userFines.notFound");
         return userFinesList;
     }
 
@@ -93,8 +91,7 @@ public class UserFinesServiceImpl implements UserFinesService {
     public List<UserFines> getFinesByUserId(Long userId) {
         validate(userId == null, "error.userFines.unexpectedId");
         List<UserFines> userFinesList = userFinesRepository.findByUserId(userId);
-        if (userFinesList.isEmpty())
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.userFines.notFound", new Object[]{}));
+        validate(userFinesList.isEmpty(), "error.userFines.notFound");
         return userFinesList;
     }
 
@@ -137,7 +134,7 @@ public class UserFinesServiceImpl implements UserFinesService {
     private void validate(boolean expression, String messageCode) {
         if (expression) {
             String errorMessage = localizedMessageSource.getMessage(messageCode, new Object[]{});
-            throw new NullPointerException(errorMessage);
+            throw new RuntimeException(errorMessage);
         }
     }
 }

@@ -72,9 +72,7 @@ public class RentCarServiceImpl implements RentCarService {
     public RentCar getById(Long id) {
         validate(id == null, "error.rent.haveId");
         Optional<RentCar> rentCar = rentCarRepository.findById(id);
-        if (!rentCar.isPresent()) {
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.rent.notFound", new Object[]{}));
-        }
+        validate(!rentCar.isPresent(), "error.rent.notFound");
         return rentCar.get();
     }
 
@@ -94,7 +92,7 @@ public class RentCarServiceImpl implements RentCarService {
         Boolean carStatus = carInfoService.getByCarId(carId).getStatus();
         validate(!carStatus, "error.rent.notAvailable");
 
-        List<RentCar> rentedCarList = rentCarRepository.findByCarId(carId);
+        List<RentCar> rentedCarList = rentCarRepository.findByCarIdAndStatus(carId, RentCarStatus.ACTIVE);
         int rentCountByCar = rentedCarList.size();
         if (rentCountByCar != 0) {
             LocalDateTime orderStartDate = rentCar.getStartDate();
@@ -103,7 +101,7 @@ public class RentCarServiceImpl implements RentCarService {
             if (rentCountByCar == rentCountByDate) {
                 rentCar.setCar(car);
             } else {
-                throw new NullPointerException(localizedMessageSource.getMessage("error.rent.notAvailable", new Object[]{}));
+                throw new RuntimeException(localizedMessageSource.getMessage("error.rent.notAvailable", new Object[]{}));
             }
         } else {
             rentCar.setCar(car);
@@ -166,10 +164,9 @@ public class RentCarServiceImpl implements RentCarService {
             RentCarStatus rentCarStatus = RentCarStatus.valueOf(status);
             rentCars = rentCarRepository.findByStatus(rentCarStatus, finishDate);
         } catch (IllegalArgumentException e) {
-            throw new NullPointerException(localizedMessageSource.getMessage("error.rent.unexpectedStatus", new Object[]{}));
+            throw new RuntimeException(localizedMessageSource.getMessage("error.rent.unexpectedStatus", new Object[]{}));
         }
-        if (rentCars.isEmpty())
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.rent.notFound", new Object[]{}));
+        validate(rentCars.isEmpty(), "error.rent.notFound");
         return rentCars;
     }
 
@@ -183,8 +180,7 @@ public class RentCarServiceImpl implements RentCarService {
     public List<RentCar> getByCarId(Long carId) {
         validate(carId == null, "error.rent.unexpectedCarId");
         List<RentCar> rentCars = rentCarRepository.findByCarId(carId, finishDate);
-        if (rentCars.isEmpty())
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.rent.notFound", new Object[]{}));
+        validate(rentCars.isEmpty(), "error.rent.notFound");
         return rentCars;
     }
 
@@ -198,8 +194,7 @@ public class RentCarServiceImpl implements RentCarService {
     public List<RentCar> getByUserId(Long userId) {
         validate(userId == null, "error.rent.unexpectedUserId");
         List<RentCar> rentCars = rentCarRepository.findByUserId(userId, finishDate);
-        if (rentCars.isEmpty())
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.rent.notFound", new Object[]{}));
+        validate(rentCars.isEmpty(), "error.rent.notFound");
         return rentCars;
     }
 
@@ -236,7 +231,7 @@ public class RentCarServiceImpl implements RentCarService {
     private void validate(boolean expression, String messageCode) {
         if (expression) {
             String errorMessage = localizedMessageSource.getMessage(messageCode, new Object[]{});
-            throw new NullPointerException(errorMessage);
+            throw new RuntimeException(errorMessage);
         }
     }
 }

@@ -18,7 +18,7 @@ public interface RentCarRepository extends JpaRepository<RentCar, Long> {
 
     List<RentCar> findByCarId(Long carId, Sort sort);
 
-    List<RentCar> findByCarId(Long carId);
+    List<RentCar> findByCarIdAndStatus(Long carId, RentCarStatus status);
 
     List<RentCar> findByUserId(Long userId, Sort sort);
 
@@ -26,6 +26,7 @@ public interface RentCarRepository extends JpaRepository<RentCar, Long> {
 
     @Query("SELECT COUNT(rc) FROM RentCar rc " +
             "WHERE rc.car.id = :carId " +
+            "AND rc.status = 'ACTIVE'" +
             "AND " +
             "(rc.finishDate < :start OR rc.startDate > :finish)")
     Integer countByDateMyPeriod(@Param("carId") Long carId, @Param("start") LocalDateTime start,

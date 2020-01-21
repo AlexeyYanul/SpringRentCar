@@ -13,7 +13,6 @@ public class UserFinesRequestDTO {
     private String description;
 
     @NotNull(message = "{userFines.bill.notNull}")
-    @NotEmpty(message = "{userFines.bill.notEmpty}")
     private BigDecimal bill;
 
     private String date;

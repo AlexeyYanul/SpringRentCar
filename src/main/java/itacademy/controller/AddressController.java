@@ -90,7 +90,7 @@ public class AddressController {
     @RequestMapping(method = RequestMethod.PUT, params = {"id"})
     public ResponseEntity<AddressDTO> update(@Valid @RequestBody AddressDTO addressDTO, @RequestParam Long id) {
         if (!Objects.equals(id, addressDTO.getId())) {
-            throw new NullPointerException(localizedMessageSource.getMessage("error.address.unexpectedId", new Object[]{}));
+            throw new RuntimeException(localizedMessageSource.getMessage("error.address.unexpectedId", new Object[]{}));
         }
         AddressDTO responseAddressDTO = mapper.map(addressService.updateAddress(mapper.map(addressDTO, Address.class)), AddressDTO.class);
         return new ResponseEntity<>(responseAddressDTO, HttpStatus.OK);

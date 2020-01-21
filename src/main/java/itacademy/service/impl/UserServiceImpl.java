@@ -56,8 +56,7 @@ public class UserServiceImpl implements UserService {
         validate(login.isEmpty(), "error.user.loginIsEmpty");
         validate(password.isEmpty(), "error.user.passwordIsEmpty");
         User responseUser = userRepository.findByLoginAndPassword(login, password);
-        if (responseUser == null)
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.user.notFound", new Object[]{}));
+        validate(responseUser == null, "error.user.notFound");
         return responseUser;
     }
 
@@ -82,9 +81,7 @@ public class UserServiceImpl implements UserService {
     public User getById(Long id) {
         validate(id == null, "error.idIsNull");
         Optional<User> user = userRepository.findById(id);
-        if (!user.isPresent()) {
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.user.notFound", new Object[]{}));
-        }
+        validate(!user.isPresent(), "error.user.notFound");
         return user.get();
     }
 
@@ -118,8 +115,7 @@ public class UserServiceImpl implements UserService {
     public List<User> getByCity(String city) {
         validate(city.isEmpty(), "error.address.cityIsNull");
         List<User> userList = userRepository.findByHomeAddressCity(city);
-        if (userList.isEmpty())
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.user.notFound", new Object[]{}));
+        validate(userList.isEmpty(), "error.user.notFound");
         return userList;
     }
 
@@ -133,8 +129,7 @@ public class UserServiceImpl implements UserService {
     public List<User> getByStreet(String street) {
         validate(street.isEmpty(), "error.address.streetIsNull");
         List<User> userList = userRepository.findByHomeAddressStreet(street);
-        if (userList.isEmpty())
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.user.notFound", new Object[]{}));
+        validate(userList.isEmpty(), "error.user.notFound");
         return userList;
     }
 
@@ -150,8 +145,7 @@ public class UserServiceImpl implements UserService {
         validate(city.isEmpty(), "error.address.cityIsNull");
         validate(street.isEmpty(), "error.address.streetIsNull");
         List<User> userList = userRepository.findByHomeAddressCityAndStreet(city, street);
-        if (userList.isEmpty())
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.user.notFound", new Object[]{}));
+        validate(userList.isEmpty(), "error.user.notFound");
         return userList;
     }
 
@@ -165,8 +159,7 @@ public class UserServiceImpl implements UserService {
     public List<User> getByLastName(String lastName) {
         validate(lastName.isEmpty(), "error.user.lastNameIsEmpty");
         List<User> userList = userRepository.findByLastName(lastName);
-        if (userList.isEmpty())
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.user.notFound", new Object[]{}));
+        validate(userList.isEmpty(), "error.user.notFound");
         return userList;
     }
 
@@ -256,7 +249,7 @@ public class UserServiceImpl implements UserService {
     private void validate(boolean expression, String messageCode) {
         if (expression) {
             String errorMessage = localizedMessageSource.getMessage(messageCode, new Object[]{});
-            throw new NullPointerException(errorMessage);
+            throw new RuntimeException(errorMessage);
         }
     }
 }

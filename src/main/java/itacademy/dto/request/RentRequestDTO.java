@@ -20,11 +20,9 @@ public class RentRequestDTO {
     private RentCarStatus status;
 
     @NotNull(message = "{rent.user.notNull}")
-    @NotEmpty(message = "{rent.user.notEmpty}")
     private Long userId;
 
     @NotNull(message = "{rent.car.notNull}")
-    @NotEmpty(message = "{rent.car.notEmpty}")
     private Long carId;
 
     public Long getId() {

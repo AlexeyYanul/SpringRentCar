@@ -92,7 +92,7 @@ public class UserController {
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity<UserDTO> update(@Valid @RequestBody UserDTO userDTO, @RequestParam Long id) {
         if (!Objects.equals(id, userDTO.getId())) {
-            throw new NullPointerException(localizedMessageSource.getMessage("error.user.unexpectedId", new Object[]{}));
+            throw new RuntimeException(localizedMessageSource.getMessage("error.user.unexpectedId", new Object[]{}));
         }
         UserDTO responseUserDTO = mapper.map(
                 userService.updateUser(mapper.map(userDTO, User.class)),

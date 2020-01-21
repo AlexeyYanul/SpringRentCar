@@ -8,7 +8,6 @@ public class EngineDTO {
     private Long id;
 
     @NotNull(message = "{engine.volume.notNull}")
-    @NotEmpty(message = "{engine.volume.notEmpty}")
     private Double volume;
 
     @NotNull(message = "{engine.fuel.notNull}")

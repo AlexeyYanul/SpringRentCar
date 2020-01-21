@@ -13,11 +13,9 @@ public class CarInfoRequestDTO {
     private Boolean status;
 
     @NotNull(message = "{carInfo.hourPrice.notNull}")
-    @NotEmpty(message = "{carInfo.hourPrice.notEmpty}")
     private BigDecimal hourPrice;
 
     @NotNull(message = "{carInfo.car.notNull}")
-    @NotEmpty(message = "{carInfo.car.notEmpty}")
     private Long carId;
 
     public Long getId() {

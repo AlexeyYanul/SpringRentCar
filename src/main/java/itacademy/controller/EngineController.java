@@ -92,7 +92,7 @@ public class EngineController {
     @RequestMapping(method = RequestMethod.PUT, params = {"id"})
     public ResponseEntity<EngineDTO> update(@Valid @RequestBody EngineDTO engineDTO, @RequestParam Long id) {
         if (!Objects.equals(engineDTO.getId(), id)) {
-            throw new NullPointerException(localizedMessageSource.getMessage("error.engine.unexpectedId", new Object[]{}));
+            throw new RuntimeException(localizedMessageSource.getMessage("error.engine.unexpectedId", new Object[]{}));
         }
         EngineDTO responseEngineDTO = mapper.map(
                 engineService.updateEngine(mapper.map(engineDTO, Engine.class)),

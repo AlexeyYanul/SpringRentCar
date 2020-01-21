@@ -56,9 +56,7 @@ public class EngineServiceImpl implements EngineService {
     public Engine getById(Long id) {
         validate(id == null, "error.idIsNull");
         Optional<Engine> engine = engineRepository.findById(id);
-        if (!engine.isPresent()) {
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.engine.notFound", new Object[]{}));
-        }
+        validate(!engine.isPresent(), "error.engine.notFound");
         return engine.get();
     }
 
@@ -123,7 +121,7 @@ public class EngineServiceImpl implements EngineService {
     private void validate(boolean expression, String messageCode) {
         if (expression) {
             String errorMessage = localizedMessageSource.getMessage(messageCode, new Object[]{});
-            throw new NullPointerException(errorMessage);
+            throw new RuntimeException(errorMessage);
         }
     }
 }

@@ -56,9 +56,7 @@ public class CarModelServiceImpl implements CarModelService {
     public CarModel getById(Long id) {
         validate(id == null, "error.idIsNull");
         Optional<CarModel> carModel = carModelRepository.findById(id);
-        if (!carModel.isPresent()) {
-            throw new EntityNotFoundException(localizedMessageSource.getMessage("error.carModel.notFound", new Object[]{}));
-        }
+        validate(!carModel.isPresent(), "error.carModel.notFound");
         return carModel.get();
     }
 
@@ -123,7 +121,7 @@ public class CarModelServiceImpl implements CarModelService {
     private void validate(boolean expression, String messageCode) {
         if (expression) {
             String errorMessage = localizedMessageSource.getMessage(messageCode, new Object[]{});
-            throw new NullPointerException(errorMessage);
+            throw new RuntimeException(errorMessage);
         }
     }
 }

@@ -102,7 +102,7 @@ public class CarInfoController {
     public ResponseEntity<CarInfoResponseDTO> update(@Valid @RequestBody CarInfoRequestDTO carInfoRequestDTO,
                                                      @RequestParam Long id) {
         if (!Objects.equals(id, carInfoRequestDTO.getId()))
-            throw new NullPointerException(localizedMessageSource.getMessage("error.carInfo.unexpectedId", new Object[]{}));
+            throw new RuntimeException(localizedMessageSource.getMessage("error.carInfo.unexpectedId", new Object[]{}));
         CarInfo saveCarInfo = carInfoService.updateCarInfo(getCarInfo(carInfoRequestDTO));
         CarInfoResponseDTO carInfoResponseDTO = mapper.map(saveCarInfo, CarInfoResponseDTO.class);
         return new ResponseEntity<>(carInfoResponseDTO, HttpStatus.OK);
