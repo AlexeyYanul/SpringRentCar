@@ -9,6 +9,7 @@ import itacademy.service.AddressService;
 import itacademy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -190,6 +191,7 @@ public class UserServiceImpl implements UserService {
      * @param user the user
      * @return the user
      */
+    @PreAuthorize("#user.id == authentication.principal.id")
     @Override
     public User updateUser(User user) {
         validate(user.getId() == null, "error.user.notHaveId");

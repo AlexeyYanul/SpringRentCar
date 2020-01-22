@@ -55,7 +55,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .mvcMatchers(HttpMethod.GET,
                         "/cars/free/**", "/cars/find/**", "/carInfo/**").permitAll()
                 .mvcMatchers(HttpMethod.PUT,
-                        "/users/**", "/addresses/**", "/rentCar/cancel/**").hasAnyRole("ADMIN", "USER")
+                        "/users/**", "/rentCar/cancel/**").hasAnyRole("ADMIN", "USER")
                 .mvcMatchers(HttpMethod.POST, "/rentCar/**").hasRole("USER")
                 .mvcMatchers(
                         "/users/**", "/addresses/**",

@@ -158,11 +158,11 @@ public class CarServiceImpl implements CarService {
     @Override
     public Car saveCar(Car car) {
         if (car.getId() != null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.car.notHaveId", new Object[]{}));
+            throw new RuntimeException(localizedMessageSource.getMessage("error.car.notHaveId", new Object[]{}));
         if (car.getCarModel() == null || car.getCarModel().getId() == null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.car.model.isNull", new Object[]{}));
+            throw new RuntimeException(localizedMessageSource.getMessage("error.car.model.isNull", new Object[]{}));
         if (car.getEngine() == null || car.getEngine().getId() == null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.car.engine.isNull", new Object[]{}));
+            throw new RuntimeException(localizedMessageSource.getMessage("error.car.engine.isNull", new Object[]{}));
         car.setCarModel(carModelService.getById(car.getCarModel().getId()));
         car.setEngine(engineService.getById(car.getEngine().getId()));
         return carRepository.save(car);

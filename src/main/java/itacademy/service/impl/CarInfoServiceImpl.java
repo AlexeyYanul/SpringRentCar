@@ -93,7 +93,7 @@ public class CarInfoServiceImpl implements CarInfoService {
     public CarInfo updateCarInfo(CarInfo carInfo) {
         validate(carInfo.getId() == null, "error.carInfo.haveId");
         if (carInfo.getCar() == null || carInfo.getCar().getId() == null)
-            throw new NullPointerException(localizedMessageSource.getMessage("error.carInfo.carIsNull", new Object[]{}));
+            throw new RuntimeException(localizedMessageSource.getMessage("error.carInfo.carIsNull", new Object[]{}));
         carInfo.setCar(carService.getById(carInfo.getCar().getId()));
         return carInfoRepository.save(carInfo);
     }

@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS public.addresses;
-CREATE TABLE public.addresses
+DROP TABLE IF EXISTS addresses;
+CREATE TABLE addresses
 (
     id bigint NOT NULL AUTO_INCREMENT,
     city character varying(20) NOT NULL,
@@ -9,8 +9,8 @@ CREATE TABLE public.addresses
     CONSTRAINT addresses_pkey PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS public.accounts;
-CREATE TABLE public.accounts
+DROP TABLE IF EXISTS accounts;
+CREATE TABLE accounts
 (
     id bigint NOT NULL AUTO_INCREMENT,
     login character varying(20) NOT NULL,
@@ -20,8 +20,8 @@ CREATE TABLE public.accounts
     CONSTRAINT account_login_unique UNIQUE (login)
 );
 
-DROP TABLE IF EXISTS public.users;
-CREATE TABLE public.users
+DROP TABLE IF EXISTS users;
+CREATE TABLE users
 (
     id bigint NOT NULL AUTO_INCREMENT,
     firstname character varying(40) NOT NULL,
@@ -31,13 +31,13 @@ CREATE TABLE public.users
     address_id bigint NOT NULL,
     CONSTRAINT users_pkey PRIMARY KEY (id),
     CONSTRAINT user_account_id_fk 
-        FOREIGN KEY (id) REFERENCES public.accounts (id),
+        FOREIGN KEY (id) REFERENCES accounts (id),
     CONSTRAINT user_address_id_fk 
-        FOREIGN KEY (address_id) REFERENCES public.addresses (id)
+        FOREIGN KEY (address_id) REFERENCES addresses (id)
 );
 
-DROP TABLE IF EXISTS public.users_fines;
-CREATE TABLE public.users_fines
+DROP TABLE IF EXISTS users_fines;
+CREATE TABLE users_fines
 (
     id bigint NOT NULL AUTO_INCREMENT,
     description character varying(100) NOT NULL,
@@ -46,11 +46,11 @@ CREATE TABLE public.users_fines
     date timestamp NOT NULL,
     CONSTRAINT users_fines_pkey PRIMARY KEY (id),
     CONSTRAINT user_fines_user_id_fk 
-        FOREIGN KEY (user_id) REFERENCES public.users (id)
+        FOREIGN KEY (user_id) REFERENCES users (id)
 );
  
-DROP TABLE IF EXISTS public.engine;
-CREATE TABLE public.engine
+DROP TABLE IF EXISTS engine;
+CREATE TABLE engine
 (
     id bigint NOT NULL AUTO_INCREMENT,
     volume numeric(2,1) NOT NULL,
@@ -59,8 +59,8 @@ CREATE TABLE public.engine
     CONSTRAINT engine_pkey PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS public.car_model;
-CREATE TABLE public.car_model
+DROP TABLE IF EXISTS car_model;
+CREATE TABLE car_model
 (
     id bigint NOT NULL AUTO_INCREMENT,
     name character varying(20) NOT NULL,
@@ -68,8 +68,8 @@ CREATE TABLE public.car_model
     CONSTRAINT car_model_pkey PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS public.car;
-CREATE TABLE public.car
+DROP TABLE IF EXISTS car;
+CREATE TABLE car
 (
     id bigint NOT NULL AUTO_INCREMENT,
     gearbox character varying(15) NOT NULL,
@@ -80,13 +80,13 @@ CREATE TABLE public.car
     engine_id bigint NOT NULL,
     CONSTRAINT car_pkey PRIMARY KEY (id),
     CONSTRAINT car_car_model_id_fk 
-        FOREIGN KEY (model_id) REFERENCES public.car_model (id),
+        FOREIGN KEY (model_id) REFERENCES car_model (id),
     CONSTRAINT car_engine_id_fk 
-        FOREIGN KEY (engine_id) REFERENCES public.engine (id)
+        FOREIGN KEY (engine_id) REFERENCES engine (id)
 );
 
-DROP TABLE IF EXISTS public.car_info;
-CREATE TABLE public.car_info
+DROP TABLE IF EXISTS car_info;
+CREATE TABLE car_info
 (
     id bigint NOT NULL AUTO_INCREMENT,
     car_id bigint NOT NULL,
@@ -94,11 +94,11 @@ CREATE TABLE public.car_info
     hour_price numeric(5,2) NOT NULL,
     CONSTRAINT car_info_pkey PRIMARY KEY (id),
     CONSTRAINT car_info_car_id_fk 
-        FOREIGN KEY (car_id) REFERENCES public.car (id)
+        FOREIGN KEY (car_id) REFERENCES car (id)
 );
 
-DROP TABLE IF EXISTS public.rent_car;
-CREATE TABLE public.rent_car
+DROP TABLE IF EXISTS rent_car;
+CREATE TABLE rent_car
 (
     id bigint NOT NULL AUTO_INCREMENT,
     start_date timestamp NOT NULL,
@@ -108,9 +108,9 @@ CREATE TABLE public.rent_car
     status character varying(10) NOT NULL,
     CONSTRAINT rent_car_pkey PRIMARY KEY (id),
     CONSTRAINT rent_car_car_id 
-        FOREIGN KEY (car_id) REFERENCES public.car (id),
+        FOREIGN KEY (car_id) REFERENCES car (id),
     CONSTRAINT rent_car_user_if_fk 
-        FOREIGN KEY (user_id) REFERENCES public.users (id)
+        FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-INSERT INTO public.accounts (id, login, password, role) VALUES (1, 'admin', 'admin', 'ROLE_ADMIN');
+INSERT INTO accounts (id, login, password, role) VALUES (1, 'admin', 'admin', 'ROLE_ADMIN');
