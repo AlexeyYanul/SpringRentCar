@@ -20,7 +20,7 @@
         <springframework.version>5.2.0.RELEASE</springframework.version>
         <springdatajpa.version>2.2.0.RELEASE</springdatajpa.version>
         <javax.servlet>4.0.1</javax.servlet>
-        <jackson.core>2.9.9</jackson.core>
+        <jackson.core>2.9.10.8</jackson.core>
         <dozer>5.5.1</dozer>
         <jjwt>0.9.1</jjwt>
     </properties>
