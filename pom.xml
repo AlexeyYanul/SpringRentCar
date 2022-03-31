@@ -17,7 +17,7 @@
         <hibernate.version>5.4.5.Final</hibernate.version>
         <hibernate.validator>6.0.16.Final</hibernate.validator>
         <postgres.version>9.1-901-1.jdbc4</postgres.version>
-        <springframework.version>5.2.0.RELEASE</springframework.version>
+        <springframework.version>5.3.18</springframework.version>
         <springdatajpa.version>2.2.0.RELEASE</springdatajpa.version>
         <javax.servlet>4.0.1</javax.servlet>
         <jackson.core>2.9.9</jackson.core>
